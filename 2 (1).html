@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>พลังแห่งแรง: ดินแดนฟิสิกส์ ม.2 | ห้องเรียนครูปลานุ่น</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Prompt -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+            min-height: 100vh;
+            color: #f8fafc;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+        .glass-input {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            backdrop-filter: blur(8px);
+        }
+        .glass-input:focus {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: #38bdf8;
+            outline: none;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+        }
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+        .certificate-box {
+            background: linear-gradient(135deg, #fef08a 0%, #fffbeb 50%, #e0f2fe 100%);
+            color: #1e293b;
+            border: 8px double #ca8a04;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(234, 179, 8, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(234, 179, 8, 0.8); }
+        }
+        .lightning-glow {
+            animation: pulseGlow 2s infinite;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-start p-4 md:p-6 overflow-x-hidden">
+
+    <!-- App Container -->
+    <div id="app" class="w-full max-w-5xl mx-auto flex flex-col min-h-[90vh] justify-between">
+        
+        <!-- Header / Navigation Bar -->
+        <header class="w-full glass-panel rounded-2xl p-4 mb-6 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center shadow-lg text-white text-xl font-bold">
+                    <i class="fa-solid fa-bolt-lightning text-yellow-300"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg md:text-xl font-bold bg-gradient-to-r from-cyan-300 via-sky-200 to-indigo-300 bg-clip-text text-transparent">
+                        พลังแห่งแรง: ดินแดนฟิสิกส์ ม.2
+                    </h1>
+                    <p class="text-xs text-cyan-200/80">ห้องเรียนครูปลานุ่น (ครูสมฤดี พูนผล)</p>
+                </div>
+            </div>
+
+            <!-- Player Status Badge -->
+            <div id="player-status" class="hidden flex items-center gap-4 bg-white/10 px-4 py-2 rounded-xl border border-white/15">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-user-graduate text-cyan-300"></i>
+                    <span id="display-player-name" class="font-medium text-sm">ผู้เล่น</span>
+                </div>
+                <div class="h-4 w-[1px] bg-white/20"></div>
+                <div class="flex items-center gap-1.5 text-yellow-300 font-bold text-sm">
+                    <i class="fa-solid fa-bolt text-yellow-400"></i>
+                    <span id="display-xp">0</span> XP
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dynamic View Area -->
+        <main id="main-view" class="flex-grow flex flex-col justify-center items-center w-full mb-6">
+            <!-- Content will be injected dynamically by JavaScript -->
+        </main>
+
+        <!-- Footer -->
+        <footer class="w-full text-center text-xs text-slate-400 py-3 border-t border-white/10">
+            วิชาวิทยาศาสตร์และเทคโนโลยี ชั้นมัธยมศึกษาปีที่ 2 • สื่อการเรียนรู้ออนไลน์ (ห้องเรียนครูปลานุ่น)
+        </footer>
+    </div>
+
+    <!-- Quiz Popup Modal -->
+    <div id="quiz-popup" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm hidden animate-fade-in">
+        <div class="glass-panel p-6 md:p-8 rounded-3xl max-w-md w-full mx-4 text-center border shadow-2xl" id="popup-box-style">
+            <div id="popup-icon" class="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-3xl mb-4 shadow-lg"></div>
+            <h3 id="popup-title" class="text-xl font-bold text-white mb-2"></h3>
+            <p id="popup-desc" class="text-xs md:text-sm text-slate-200 leading-relaxed mb-6"></p>
+            <div class="text-xs text-cyan-300 animate-pulse">กำลังเปลี่ยนไปข้อถัดไปอัตโนมัติใน 3 วินาที...</div>
+        </div>
+    </div>
+
+    <script>
+        // --- Game State & Tracking ---
+        let gameState = {
+            playerName: "",
+            xp: 0,
+            lightningCount: 0,
+            currentScreen: "welcome", // welcome, menu, mode1, mode2, mode3, mode4, summary
+            mode1Index: 0,
+            viewedFlashcards: new Set(),
+            simsTested: new Set(),
+            hintUsedCount: 0,
+            simSubTab: 'vector',
+            vectorMode: 'headtail',
+            vec1Mag: 40,
+            vec2Mag: 30,
+            netRight: 60,
+            netLeft: 20,
+            surfaceType: 'wood',
+            appliedForce: 60,
+            normalForce: 50,
+            newtonRule: 1,
+            objWeight: 40,
+            buoyantForce: 60,
+            quizIndex: 0,
+            quizScore: 0,
+            showHintBox: false,
+            // Mode 4 Lightning Quiz & Racing Game State
+            lightningGamePhase: 'intro', // intro, playing, racing, summary
+            lightningQIndex: 0,
+            lightningScore: 0,
+            carX: 50,
+            raceAnimFrame: null,
+            keys: {}
+        };
+
+        // --- Data: Mode 1 Flashcards ---
+        const flashcardsData = [
+            {
+                title: "ปริมาณสเกลาร์ (Scalar Quantity)",
+                meaning: "ปริมาณที่มีแต่ขนาดเพียงอย่างเดียว ไม่ต้องบอกทิศทาง นำมาบวกลบกันตามหลักพีชคณิตทั่วไป",
+                formula: "ไม่มีทิศทางกำกับ เช่น ระยะทาง = อัตราเร็ว × เวลา",
+                example: "ระยะทาง, อัตราเร็ว, มวล, เวลา, อุณหภูมิ, พลังงาน",
+                icon: "fa-ruler",
+                category: "พื้นฐานการเคลื่อนที่"
+            },
+            {
+                title: "ปริมาณเวกเตอร์ (Vector Quantity)",
+                meaning: "ปริมาณที่มีทั้งขนาดและทิศทาง การนำมารวมกันต้องคำนึงถึงทิศทางด้วยเสมอ",
+                formula: "มีทิศทางกำกับ เช่น แรง (F̄), การกระจัด (s̄)",
+                example: "การกระจัด, ความเร็ว, ความเร่ง, แรง, โมเมนต์ของแรง",
+                icon: "fa-compass",
+                category: "พื้นฐานการเคลื่อนที่"
+            },
+            {
+                title: "ระยะทาง (Distance)",
+                meaning: "ความยาวตามเส้นทางจริงทั้งหมดที่วัตถุเคลื่อนที่ได้ เป็นปริมาณสเกลาร์ มีหน่วยเป็นเมตร (m)",
+                formula: "Distance = ผลรวมความยาวเส้นทางจริง",
+                example: "วิ่งรอบสนามรอบวงกลมได้ระยะทาง 40 เมตร",
+                icon: "fa-route",
+                category: "พื้นฐานการเคลื่อนที่"
+            },
+            {
+                title: "การกระจัด (Displacement)",
+                meaning: "ระยะทางที่สั้นที่สุดจากจุดเริ่มต้นลากตรงไปยังจุดสุดท้าย เป็นปริมาณเวกเตอร์ มีหน่วยเป็นเมตร (m)",
+                formula: "s̄ = ตำแหน่งสุดท้าย - ตำแหน่งเริ่มต้น",
+                example: "วิ่งรอบสนามแล้วกลับที่เดิม การกระจัดเป็นศูนย์ (0 m)",
+                icon: "fa-arrows-left-right",
+                category: "พื้นฐานการเคลื่อนที่"
+            },
+            {
+                title: "อัตราเร็ว (Speed)",
+                meaning: "ระยะทางที่วัตถุเคลื่อนที่ได้ในหนึ่งหน่วยเวลา เป็นปริมาณสเกลาร์ มีหน่วยเป็นเมตรต่อวินาที (m/s)",
+                formula: "v = s / t (v = อัตราเร็ว, s = ระยะทาง, t = เวลา)",
+                example: "รถยนต์วิ่งด้วยอัตราเร็ว 60 กิโลเมตรต่อชั่วโมง",
+                icon: "fa-gauge",
+                category: "พื้นฐานการเคลื่อนที่"
+            },
+            {
+                title: "ความเร็ว (Velocity)",
+                meaning: "การกระจัดที่เปลี่ยนแปลงไปในหนึ่งหน่วยเวลา เป็นปริมาณเวกเตอร์ มีหน่วยเป็นเมตรต่อวินาที (m/s)",
+                formula: "v̄ = s̄ / t",
+                example: "รถยนต์วิ่งไปทางทิศตะวันออกด้วยความเร็ว 60 m/s",
+                icon: "fa-gauge-high",
+                category: "พื้นฐานการเคลื่อนที่"
+            },
+            {
+                title: "ความเร่ง (Acceleration)",
+                meaning: "ความเร็วที่เปลี่ยนแปลงไปในหนึ่งหน่วยเวลา เป็นปริมาณเวกเตอร์ เกิดขึ้นเมื่อมีแรงลัพธ์ไม่เป็นศูนย์มากกระทำ",
+                formula: "ā = (v̄ - ū) / t มีหน่วยเป็น m/s<sup>2</sup>",
+                example: "วัตถุตกลงสู่พื้นโลกมีความเร่งเนื่องจากแรงโน้มถ่วงประมาณ 10 m/s<sup>2</sup>",
+                icon: "fa-jet-fighter",
+                category: "การเคลื่อนที่และแรง"
+            },
+            {
+                title: "แรงเสียดทาน (Friction Force)",
+                meaning: "แรงที่ต้านทานการเคลื่อนที่ของวัตถุ เกิดขึ้นระหว่างผิวสัมผัส มีทิศทางตรงข้ามกับการเคลื่อนที่เสมอ",
+                formula: "f = μN (μ = สัมประสิทธิ์ความเสียดทาน, N = แรงปฏิกิริยาตั้งฉาก)",
+                example: "รองเท้ากับพื้นถนนช่วยให้เราเดินไม่ลื่นไถล",
+                icon: "fa-hand",
+                category: "แรงและการเคลื่อนที่"
+            },
+            {
+                title: "โมเมนต์ของแรง (Moment of Force)",
+                meaning: "ผลคูณของแรงกับระยะทางตั้งฉากจากแนวแรงไปยังจุดหมุน ทำให้วัตถุเกิดการหมุนรอบจุดหมุน",
+                formula: "M = F × L มีหน่วยเป็น นิวตัน-เมตร (N·m)",
+                example: "การใช้ประแจขันน็อต หรือการเล่นกระดานหก",
+                icon: "fa-rotate",
+                category: "โมเมนต์และคาน"
+            },
+            {
+                title: "คานอันดับที่ 1 (First-class Lever)",
+                meaning: "คานที่มีจุดหมุน (F) อยู่ระหว่างแรงความพยายาม (E) และแรงความต้านทาน (L)",
+                formula: "รูปแบบการจัดเรียง: E - F - L",
+                example: "กรรไกร, กรรไกรตัดเล็บ, คีม, ชะแลง",
+                icon: "fa-scale-balanced",
+                category: "โมเมนต์และคาน"
+            },
+            {
+                title: "คานอันดับที่ 2 (Second-class Lever)",
+                meaning: "คานที่มีแรงความต้านทาน (L) อยู่ระหว่างจุดหมุน (F) และแรงความพยายาม (E) ช่วยผ่อนแรงได้มาก",
+                formula: "รูปแบบการจัดเรียง: F - L - E",
+                example: "รถเข็นทราย, ที่เปิดขวดน้ำอัดลม, ที่ตัดกระดาษ",
+                icon: "fa-truck-ramp-box",
+                category: "โมเมนต์และคาน"
+            },
+            {
+                title: "คานอันดับที่ 3 (Third-class Lever)",
+                meaning: "คานที่มีแรงความพยายาม (E) อยู่ระหว่างจุดหมุน (F) และแรงความต้านทาน (L) ไม่เน้นผ่อนแรงแต่เน้นความเร็ว",
+                formula: "รูปแบบการจัดเรียง: F - E - L",
+                example: "คีมคีบน้ำแข็ง, ตะเกียบ, แหนบ, ไม้กวาด",
+                icon: "fa-hand-holding",
+                category: "โมเมนต์และคาน"
+            },
+            {
+                title: "ความดันของของเหลว (Liquid Pressure)",
+                meaning: "แรงที่ของเหลวกระทำตั้งฉากต่อหนึ่งหน่วยพื้นที่ เพิ่มขึ้นตามความลึกและความหนาแน่นของของเหลว",
+                formula: "P = ρgh (ρ = ความหนาแน่น, g = ความโน้มถ่วง, h = ความลึก)",
+                example: "เขื่อนกั้นน้ำต้องสร้างฐานเขื่อนด้านล่างให้หนาและรับแรงดันสูงมาก",
+                icon: "fa-water",
+                category: "ความดันและของเหลว"
+            },
+            {
+                title: "แรงพยุงของของเหลว (Buoyant Force)",
+                meaning: "แรงที่ของเหลวดันวัตถุขึ้นเมื่อวัตถุจมอยู่ในของเหลว มีขนาดเท่ากับน้ำหนักของของเหลวที่ถูกวัตถุนั้นแทนที่",
+                formula: "F<sub>b</sub> = W<sub>liquid displaced</sub>",
+                example: "เรือเหล็กขนาดใหญ่สามารถลอยน้ำได้เนื่องจากมีแรงพยุงสูง",
+                icon: "fa-ship",
+                category: "ความดันและของเหลว"
+            },
+            {
+                title: "แรงโน้มถ่วง (Gravitational Force)",
+                meaning: "แรงดึงดูดระหว่างมวลของโลกกับวัตถุบนโลก ทำให้วัตถุมีน้ำหนักและตกลงสู่พื้นโลก",
+                formula: "W = mg (g ≈ 10 m/s<sup>2</sup>)",
+                example: "ผลไม้ร่วงหล่นสู่พื้นดินเมื่อหลุดจากขั้วต้นไม้",
+                icon: "fa-globe",
+                category: "แรงโน้มถ่วง"
+            }
+        ];
+
+        // --- Data: Mode 3 Quiz Questions ---
+        const originalQuizData = [
+            {
+                question: "ข้อใดจัดกลุ่มปริมาณทางฟิสิกส์เป็น 'ปริมาณเวกเตอร์' ทั้งหมดที่มีทิศทางกำกับ?",
+                options: ["ระยะทาง อัตราเร็ว มวล", "การกระจัด ความเร็ว แรง โมเมนต์ของแรง", "เวลา อุณหภูมิ พื้นที่", "อัตราเร่ง ระยะทาง งาน"],
+                correctText: "การกระจัด ความเร็ว แรง โมเมนต์ของแรง",
+                explanation: "การกระจัด ความเร็ว แรง และโมเมนต์ของแรง เป็นปริมาณเวกเตอร์ที่มีทั้งขนาดและทิศทาง",
+                formulaHint: "<b>สูตร/หลักการ:</b> ปริมาณเวกเตอร์ = ขนาด + ทิศทาง"
+            },
+            {
+                question: "วิ่งรอบสนามหญ้ารูปวงกลมรัศมี 7 เมตร ครบ 1 รอบพอดี ข้อความใดถูกต้องเกี่ยวกับระยะทางและการกระจัด?",
+                options: ["ระยะทาง 44 เมตร, การกระจัด 44 เมตร", "ระยะทาง 44 เมตร, การกระจัด 0 เมตร", "ระยะทาง 0 เมตร, การกระจัด 44 เมตร", "ระยะทาง 22 เมตร, การกระจัด 14 เมตร"],
+                correctText: "ระยะทาง 44 เมตร, การกระจัด 0 เมตร",
+                explanation: "ครบ 1 รอบ ระยะทาง = เส้นรอบวง (44 เมตร) ส่วนการกระจัดเป็นศูนย์เพราะกลับมาจุดเริ่มต้นเดิม",
+                formulaHint: "<b>สูตร:</b> เส้นรอบวง = 2&pi;r | การกระจัด = จุดสิ้นสุด - จุดเริ่มต้น"
+            },
+            {
+                question: "การรวมเวกเตอร์แรงสองแรงขนาด 30 N และ 40 N ตั้งฉากกัน จะมีขนาดแรงลัพธ์เท่าใด?",
+                options: ["10 นิวตัน", "50 นิวตัน", "70 นิวตัน", "120 นิวตัน"],
+                correctText: "50 นิวตัน",
+                explanation: "แรงตั้งฉากกันหาแรงลัพธ์จากทฤษฎีบทพีทาโกรัส: R = √(30² + 40²) = 50 นิวตัน",
+                formulaHint: "<b>สูตร:</b> R = &radic;(F<sub>1</sub><sup>2</sup> + F<sub>2</sub><sup>2</sup>)"
+            },
+            {
+                question: "สถานการณ์ใดที่จัดอยู่ในกรณี 'แรงลัพธ์เป็นศูนย์' (Net Force = 0) ตามกฎข้อที่ 1 ของนิวตัน?",
+                options: ["วัตถุกำลังตกลงสู่พื้นด้วยความเร่ง", "รถยนต์วิ่งด้วยความเร็วคงที่บนถนนตรงเรียบ", "กล่องถูกดึงไปขวา 50 N และซ้าย 20 N พร้อมกัน", "วัตถุถูกปล่อยให้ตกอย่างอิสระ"],
+                correctText: "รถยนต์วิ่งด้วยความเร็วคงที่บนถนนตรงเรียบ",
+                explanation: "วัตถุที่หยุดนิ่งหรือเคลื่อนที่ด้วยความเร็วคงที่ แรงลัพธ์มีค่าเป็นศูนย์ (ΣF = 0)",
+                formulaHint: "<b>สูตร:</b> &Sigma;F = 0 (วัตถุรักษาสภาพการเคลื่อนที่เดิม)"
+            },
+            {
+                question: "วัตถุมวล 2 kg วางบนพื้น เมื่อออกแรงดึง 15 N ไปข้างหน้า แต่มีแรงเสียดทานต้านไว้ 5 N ความเร่งมีค่าเท่าใด?",
+                options: ["3 m/s<sup>2</sup>", "5 m/s<sup>2</sup>", "10 m/s<sup>2</sup>", "20 m/s<sup>2</sup>"],
+                correctText: "5 m/s<sup>2</sup>",
+                explanation: "F_net = 15 - 5 = 10 N. จาก a = F_net / m = 10 / 2 = 5 m/s<sup>2</sup>",
+                formulaHint: "<b>สูตร:</b> F<sub>net</sub> = แรงดึง - แรงเสียดทาน | a = F<sub>net</sub> / m"
+            },
+            {
+                question: "กฎการเคลื่อนที่ข้อที่ 3 ของนิวตัน เกี่ยวข้องกับความสัมพันธ์ในข้อใด?",
+                options: ["วัตถุรักษาสภาพการเคลื่อนที่เดิม", "ทุกแรงกิริยาจะมีแรงปฏิกิริยาขนาดเท่ากันและทิศทางตรงข้าม (Action = -Reaction)", "ความเร่งแปรผันตรงกับแรงลัพธ์", "มวลของวัตถุต้านทานความเร่ง"],
+                correctText: "ทุกแรงกิริยาจะมีแรงปฏิกิริยาขนาดเท่ากันและทิศทางตรงข้าม (Action = -Reaction)",
+                explanation: "กฎข้อที่ 3 กล่าวว่า ทุกแรงกิริยาจะมีแรงปฏิกิริยาขนาดเท่ากันแต่ทิศตรงข้าม",
+                formulaHint: "<b>สูตร:</b> แรงกิริยา (Action) = -แรงปฏิกิริยา (Reaction)"
+            },
+            {
+                question: "คานอันดับที่ 2 ตามหลักการเครื่องกลอย่างง่าย มีตำแหน่งของสิ่งใดอยู่ตรงกลางระหว่างจุดหมุนและแรงพยายาม?",
+                options: ["จุดหมุน (Fulcrum)", "แรงความพยายาม (Effort)", "แรงความต้านทานหรือน้ำหนัก (Load)", "จุดศูนย์ถ่วงของคาน"],
+                correctText: "แรงความต้านทานหรือน้ำหนัก (Load)",
+                explanation: "คานอันดับ 2 มีแรงความต้านทาน (Load) อยู่ตรงกลาง เช่น รถเข็นทราย",
+                formulaHint: "<b>หลักการ:</b> จุดหมุน (F) - แรงต้าน (L) - แรงพยายาม (E)"
+            },
+            {
+                question: "ออกแรง 60 N กดลงที่ปลายคานห่างจากจุดหมุน 2 m เพื่อยกวัตถุหนัก W ห่างจากจุดหมุน 1 m คานสมดุล W หนักเท่าใด?",
+                options: ["30 นิวตัน", "60 นิวตัน", "120 นิวตัน", "240 นิวตัน"],
+                correctText: "120 นิวตัน",
+                explanation: "โมเมนต์ทวน = โมเมนต์ตาม => 60 × 2 = W × 1 => W = 120 N",
+                formulaHint: "<b>สูตร:</b> F<sub>1</sub> &times; L<sub>1</sub> = F<sub>2</sub> &times; L<sub>2</sub>"
+            },
+            {
+                question: "ข้อใดคือปัจจัยหลักที่มีผลต่อ 'ความดันในของเหลว' ตามสูตร P = ρgh?",
+                options: ["พื้นที่ผิวภาชนะและรูปร่างภาชนะ", "ความลึกและความหนาแน่นของของเหลว", "ปริมาตรของเหลวทั้งหมดบนโลก", "ความดันบรรยากาศภายนอก"],
+                correctText: "ความลึกและความหนาแน่นของของเหลว",
+                explanation: "ความดันในของเหลวขึ้นอยู่กับความหนาแน่นและความลึก",
+                formulaHint: "<b>สูตร:</b> P = &rho;gh"
+            },
+            {
+                question: "เรือเหล็กขนาดใหญ่ลอยน้ำได้ เนื่องจากแรงพยุงของของเหลวเป็นไปตามหลักการของใคร?",
+                options: ["หลักของพาสคาล", "หลักของอาร์คิมิดีส (Archimedes' Principle)", "กฎของบอยล์", "กฎแรงดึงดูดของนิวตัน"],
+                correctText: "หลักของอาร์คิมิดีส (Archimedes' Principle)",
+                explanation: "แรงพยุงเป็นไปตามหลักของอาร์คิมิดีส ขนาดแรงพยุงเท่ากับน้ำหนักของเหลวที่ถูกวัตถุนั้นแทนที่",
+                formulaHint: "<b>สูตร:</b> แรงพยุง (F<sub>b</sub>) = น้ำหนักของเหลวที่ถูกแทนที่"
+            },
+            {
+                question: "สถานการณ์ใดแสดงถึงลักษณะของวัตถุที่มีสภาพ 'ลอยปริ่มน้ำ' ในของเหลว?",
+                options: ["วัตถุจมลงจนติดก้นภาชนะ", "วัตถุลอยจมมิดพอดีแต่ผิวบนเสมอกับผิวหน้าของเหลว", "วัตถุลอยอยู่บนผิวน้ำมากกว่าครึ่ง", "วัตถุจมลงครึ่งหนึ่ง"],
+                correctText: "วัตถุลอยจมมิดพอดีแต่ผิวบนเสมอกับผิวหน้าของเหลว",
+                explanation: "ลอยปริ่มน้ำคือวัตถุจมมิดพอดีแต่ผิวบนเสมอกับผิวน้ำ (W = Fb)",
+                formulaHint: "<b>เงื่อนไข:</b> น้ำหนักวัตถุ (W) = แรงพยุง (F<sub>b</sub>)"
+            },
+            {
+                question: "หากชั่งวัตถุก้อนหนึ่งในอากาศได้ 50 N แต่นำไปชั่งในน้ำอ่านค่าได้ 30 N แรงพยุงของน้ำมีค่าเท่าใด?",
+                options: ["20 นิวตัน", "30 นิวตัน", "50 นิวตัน", "80 นิวตัน"],
+                correctText: "20 นิวตัน",
+                explanation: "แรงพยุง (Fb) = น้ำหนักในอากาศ - น้ำหนักในของเหลว = 50 - 30 = 20 N",
+                formulaHint: "<b>สูตร:</b> F<sub>b</sub> = น้ำหนักในอากาศ - น้ำหนักในของเหลว"
+            },
+            {
+                question: "แรงโน้มถ่วงของโลกที่กระทำต่อวัตถุ (W = mg) มีทิศทางพุ่งไปทางใดเสมอ?",
+                options: ["พุ่งขึ้นสู่ท้องฟ้า", "พุ่งเข้าสู่จุดศูนย์กลางของโลก", "พุ่งไปทางทิศตะวันออก", "ขนานกับพื้นผิวโลก"],
+                correctText: "พุ่งเข้าสู่จุดศูนย์กลางของโลก",
+                explanation: "แรงโน้มถ่วงดึงดูดมวลวัตถุเข้าสู่ศูนย์กลางโลกเสมอ",
+                formulaHint: "<b>สูตร:</b> W = mg (ทิศทางพุ่งเข้าสู่จุดศูนย์กลางโลก)"
+            },
+            {
+                question: "เครื่องอัดไฮดรอลิกในอู่ซ่อมรถยนต์ ใช้หลักการของกฎข้อใดในการส่งผ่านความดันเพื่อผ่อนแรงยก?",
+                options: ["หลักของอาร์คิมิดีส", "หลักของพาสคาล (Pascal's Principle)", "กฎการเคลื่อนที่ข้อที่ 2", "โมเมนต์ของแรงหมุน"],
+                correctText: "หลักของพาสคาล (Pascal's Principle)",
+                explanation: "หลักของพาสคาลกล่าวว่า ความดันในของเหลวภาชนะปิดจะถูกถ่ายโอนไปทุกทิศทางเท่ากัน",
+                formulaHint: "<b>หลักการ:</b> ความดันในของเหลวภาชนะปิดส่งผ่านไปเท่ากันทุกทิศทาง"
+            },
+            {
+                question: "หากนักเรียนต้องการลดแรงเสียดทานระหว่างชิ้นส่วนเครื่องจักรกลที่เสียดสีกัน ควรเลือกใช้วิธีใด?",
+                options: ["เพิ่มแรงกดระหว่างผิวสัมผัส", "ขัดผิวโลหะให้หยาบขรุขระ", "ใช้น้ำมันหล่อลื่นหรือลูกปืนลดการเสียดสี", "เพิ่มพื้นที่ผิวสัมผัส"],
+                correctText: "ใช้น้ำมันหล่อลื่นหรือลูกปืนลดการเสียดสี",
+                explanation: "การใช้น้ำมันหล่อลื่นหรือลูกปืนช่วยลดค่าสัมประสิทธิ์ความเสียดทาน (μ)",
+                formulaHint: "<b>สูตร:</b> f = &mu;N (ลดค่า &mu; เพื่อลดแรงเสียดทาน)"
+            }
+        ];
+
+        let quizData = [];
+
+        function prepareRandomizedQuiz() {
+            quizData = originalQuizData.map(q => {
+                let optionsWithFlag = q.options.map(opt => ({
+                    text: opt,
+                    isCorrect: (opt === q.correctText)
+                }));
+                optionsWithFlag.sort(() => Math.random() - 0.5);
+                let newCorrectIndex = optionsWithFlag.findIndex(o => o.isCorrect);
+                return {
+                    question: q.question,
+                    options: optionsWithFlag.map(o => o.text),
+                    answer: newCorrectIndex,
+                    explanation: q.explanation,
+                    formulaHint: q.formulaHint
+                };
+            });
+            quizData.sort(() => Math.random() - 0.5);
+        }
+
+        // --- Data: Mode 4 Lightning Quiz Game Bank ---
+        const lightningQuizBank = [
+            {
+                question: "ปริมาณทางฟิสิกส์ที่มีทั้งขนาดและทิศทางเรียกว่าอะไร?",
+                options: ["ปริมาณเวกเตอร์", "ปริมาณสเกลาร์", "ระยะทาง", "อัตราเร็ว"],
+                correctText: "ปริมาณเวกเตอร์",
+                explanation: "ปริมาณเวกเตอร์คือปริมาณที่ต้องบอกทั้งขนาดและทิศทางจึงจะสมบูรณ์"
+            },
+            {
+                question: "ระยะทางที่สั้นที่สุดจากจุดเริ่มต้นลากตรงไปยังจุดสุดท้ายคืออะไร?",
+                options: ["การกระจัด", "ระยะทางรวม", "อัตราเร็ว", "ความเร่ง"],
+                correctText: "การกระจัด",
+                explanation: "การกระจัดเป็นปริมาณเวกเตอร์วัดจากจุดเริ่มต้นตรงไปยังจุดสิ้นสุด"
+            },
+            {
+                question: "ผลรวมของแรงหลายแรงที่กระทำต่อวัตถุเดียวกันเรียกว่าอะไร?",
+                options: ["แรงลัพธ์", "แรงเสียดทาน", "แรงพยุง", "แรงโน้มถ่วง"],
+                correctText: "แรงลัพธ์",
+                explanation: "แรงลัพธ์คือผลรวมแบบเวกเตอร์ของแรงทั้งหมดที่มากกระทำต่อวัตถุ"
+            },
+            {
+                question: "กฎการเคลื่อนที่ข้อที่ 1 ของนิวตัน กล่าวถึงเรื่องใดเป็นสำคัญ?",
+                options: ["กฎความเฉื่อย", "F = ma", "แรงกิริยาและปฏิกิริยา", "ความดันของเหลว"],
+                correctText: "กฎความเฉื่อย",
+                explanation: "กฎข้อที่ 1 หรือกฎความเฉื่อยระบุว่าวัตถุจะรักษาสภาพการเคลื่อนที่เดิมหากแรงลัพธ์เป็นศูนย์"
+            },
+            {
+                question: "แรงที่ต้านทานการเคลื่อนที่ของวัตถุระหว่างผิวสัมผัสคือแรงใด?",
+                options: ["แรงเสียดทาน", "แรงพยุง", "แรงโน้มถ่วง", "แรงแม่เหล็ก"],
+                correctText: "แรงเสียดทาน",
+                explanation: "แรงเสียดทานมีทิศทางตรงข้ามกับการเคลื่อนที่ของวัตถุเสมอ"
+            },
+            {
+                question: "เครื่องมือหรืออุปกรณ์ใดจัดเป็น 'คานอันดับที่ 1' ตามหลักการ?",
+                options: ["กรรไกร", "รถเข็นทราย", "คีมคีบน้ำแข็ง", "ที่เปิดขวด"],
+                correctText: "กรรไกร",
+                explanation: "คานอันดับ 1 มีจุดหมุนอยู่ระหว่างแรงพยายามและแรงความต้านทาน เช่น กรรไกร"
+            },
+            {
+                question: "เรือเหล็กขนาดใหญ่สามารถลอยน้ำได้ เป็นไปตามหลักการของใคร?",
+                options: ["หลักของอาร์คิมิดีส", "หลักของพาสคาล", "กฎของนิวตัน", "กฎของบอยล์"],
+                correctText: "หลักของอาร์คิมิดีส",
+                explanation: "แรงพยุงเป็นไปตามหลักของอาร์คิมิดีส โดยขนาดแรงพยุงเท่ากับน้ำหนักของเหลวที่ถูกแทนที่"
+            },
+            {
+                question: "แรงดึงดูดของโลกที่กระทำต่อมวลของวัตถุทำให้เกิดสิ่งใด?",
+                options: ["น้ำหนัก (Weight)", "ความเร่ง", "แรงเสียดทาน", "โมเมนต์ของแรง"],
+                correctText: "น้ำหนัก (Weight)",
+                explanation: "น้ำหนัก W = mg เกิดจากแรงโน้มถ่วงของโลกดึงดูดมวลของวัตถุ"
+            },
+            {
+                question: "ถ้าแรงลัพธ์ที่มากกระทำต่อวัตถุเป็นศูนย์ (ΣF = 0) วัตถุจะมีลักษณะอย่างไร?",
+                options: ["อยู่นิ่งหรือเคลื่อนที่ด้วยความเร็วคงที่", "มีความเร่งเพิ่มขึ้นเรื่อยๆ", "เคลื่อนที่เป็นวงกลม", "หมุนวนรอบตัวเอง"],
+                correctText: "อยู่นิ่งหรือเคลื่อนที่ด้วยความเร็วคงที่",
+                explanation: "ตามกฎการเคลื่อนที่ข้อที่ 1 แรงลัพธ์เป็นศูนย์ทำให้วัตถุรักษาสภาพการเคลื่อนที่เดิม"
+            },
+            {
+                question: "สูตรคำนวณโมเมนต์ของแรง (Moment of Force) คือข้อใด?",
+                options: ["M = F × L", "P = ρgh", "F = ma", "W = mg"],
+                correctText: "M = F × L",
+                explanation: "โมเมนต์ของแรงเท่ากับผลคูณของแรง (F) กับระยะทางตั้งฉากจากแนวแรงถึงจุดหมุน (L)"
+            }
+        ];
+
+        let activeLightningQuiz = [];
+
+        function prepareLightningQuizGame() {
+            activeLightningQuiz = lightningQuizBank.map(q => {
+                let opts = [...q.options];
+                opts.sort(() => Math.random() - 0.5);
+                return {
+                    question: q.question,
+                    options: opts,
+                    correct: q.correctText,
+                    explanation: q.explanation
+                };
+            });
+            activeLightningQuiz.sort(() => Math.random() - 0.5);
+            gameState.lightningQIndex = 0;
+            gameState.lightningScore = 0;
+            gameState.lightningGamePhase = 'playing';
+            gameState.carX = 250;
+        }
+
+        // --- XP Calculation Function ---
+        function calculateTotalXP() {
+            let flashcardXP = gameState.viewedFlashcards.size * 10;
+            let simXP = gameState.simsTested.size * 50;
+            let quizXP = gameState.quizScore * 100;
+            let lightningGameXP = gameState.lightningScore * 50;
+            let penaltyXP = gameState.hintUsedCount * 10;
+            gameState.xp = Math.max(0, flashcardXP + simXP + quizXP + lightningGameXP - penaltyXP);
+            return gameState.xp;
+        }
+
+        // --- Initialization on Load ---
+        window.onload = function() {
+            prepareRandomizedQuiz();
+            renderScreen();
+        };
+
+        // --- Screen Router ---
+        function renderScreen() {
+            const mainView = document.getElementById('main-view');
+            const playerStatus = document.getElementById('player-status');
+
+            calculateTotalXP();
+
+            if (gameState.currentScreen === 'welcome') {
+                playerStatus.classList.add('hidden');
+                mainView.innerHTML = renderWelcomeScreen();
+            } else {
+                playerStatus.classList.remove('hidden');
+                document.getElementById('display-player-name').innerText = gameState.playerName || "ผู้เล่น";
+                document.getElementById('display-xp').innerText = gameState.xp;
+
+                if (gameState.currentScreen === 'menu') {
+                    mainView.innerHTML = renderMenuScreen();
+                } else if (gameState.currentScreen === 'mode1') {
+                    mainView.innerHTML = renderMode1Screen();
+                } else if (gameState.currentScreen === 'mode2') {
+                    mainView.innerHTML = renderMode2Screen();
+                    initSimulationCanvas();
+                } else if (gameState.currentScreen === 'mode3') {
+                    mainView.innerHTML = renderMode3Screen();
+                } else if (gameState.currentScreen === 'mode4') {
+                    mainView.innerHTML = renderMode4Screen();
+                    if (gameState.lightningGamePhase === 'racing') {
+                        initRaceCanvas();
+                    }
+                } else if (gameState.currentScreen === 'summary') {
+                    mainView.innerHTML = renderSummaryScreen();
+                }
+            }
+        }
+
+        // --- Welcome Screen ---
+        function renderWelcomeScreen() {
+            return `
+                <div class="glass-panel w-full max-w-lg p-8 rounded-3xl shadow-2xl text-center flex flex-col items-center animate-fade-in">
+                    <div class="w-20 h-20 rounded-2xl bg-gradient-to-tr from-cyan-400 to-indigo-600 flex items-center justify-center shadow-xl mb-6 text-3xl text-white lightning-glow">
+                        <i class="fa-solid fa-atom text-yellow-300 animate-spin" style="animation-duration: 10s;"></i>
+                    </div>
+                    
+                    <h2 class="text-2xl md:text-3xl font-bold mb-2 bg-gradient-to-r from-cyan-200 via-sky-300 to-purple-300 bg-clip-text text-transparent">
+                        พลังแห่งแรง: ดินแดนฟิสิกส์ ม.2
+                    </h2>
+                    <p class="text-xs text-cyan-200/90 mb-6 font-light">
+                        ห้องเรียนครูปลานุ่น (ครูสมฤดี พูนผล)
+                    </p>
+
+                    <div class="w-full space-y-4 text-left">
+                        <label class="block text-xs uppercase tracking-wider text-cyan-300 font-medium">กรอกชื่อ-นามสกุล หรือชื่อเล่นนักเรียน</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-cyan-300">
+                                <i class="fa-solid fa-user-pen"></i>
+                            </span>
+                            <input type="text" id="player-name-input" value="${gameState.playerName}" placeholder="เช่น ด.ช.รักเรียน เพียรศึกษา" 
+                                class="glass-input w-full py-3.5 pl-12 pr-4 rounded-xl text-sm transition-all">
+                        </div>
+                    </div>
+
+                    <button onclick="handleStartGame()" class="mt-8 w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 via-sky-600 to-indigo-600 text-white font-bold shadow-lg hover:opacity-95 transform hover:-translate-y-0.5 transition-all flex items-center justify-center gap-3 text-base">
+                        <span>เข้าสู่บทเรียนและผจญภัย</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            `;
+        }
+
+        function handleStartGame() {
+            const input = document.getElementById('player-name-input');
+            const name = input.value.trim();
+            if (!name) {
+                showToast("กรุณากรอกชื่อผู้เล่นก่อนเข้าสู่เกมครับ/ค่ะ!", "error");
+                return;
+            }
+            gameState.playerName = name;
+            gameState.currentScreen = 'menu';
+            renderScreen();
+        }
+
+        // --- Menu Screen (4 Items) ---
+        function renderMenuScreen() {
+            return `
+                <div class="w-full max-w-5xl text-center">
+                    <div class="mb-8">
+                        <span class="px-4 py-1.5 rounded-full bg-cyan-500/20 text-cyan-300 text-xs font-semibold border border-cyan-500/30">
+                            ห้องเรียนครูปลานุ่น (ครูสมฤดี พูนผล)
+                        </span>
+                        <h2 class="text-3xl font-bold mt-3 text-white">เลือกรายการการเรียนรู้และเกมส์ ม.2</h2>
+                        <p class="text-sm text-slate-300 mt-1">สำรวจให้ครบทุกรายการเพื่อสะสม XP และปลดล็อกเกียรติบัตรความสำเร็จ!</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- รายการที่ 1 -->
+                        <div onclick="switchScreen('mode1')" class="glass-card p-6 rounded-3xl flex flex-col items-center text-center cursor-pointer group">
+                            <div class="w-16 h-16 rounded-2xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-300 text-2xl mb-4 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-clone"></i>
+                            </div>
+                            <span class="text-xs font-semibold text-cyan-300 uppercase tracking-widest mb-1">รายการที่ 1</span>
+                            <h3 class="text-base font-bold text-white mb-2">ศึกษาความรู้และคำสำคัญ</h3>
+                            <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                                การ์ดความรู้ 16 คำสำคัญ พร้อมสูตรและตัวอย่าง (+10 XP)
+                            </p>
+                            <span class="mt-auto px-4 py-2 rounded-xl bg-white/10 text-xs font-medium text-cyan-200 group-hover:bg-cyan-500 group-hover:text-white transition-colors flex items-center gap-2">
+                                เริ่มศึกษา <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                            </span>
+                        </div>
+
+                        <!-- รายการที่ 2 -->
+                        <div onclick="switchScreen('mode2')" class="glass-card p-6 rounded-3xl flex flex-col items-center text-center cursor-pointer group">
+                            <div class="w-16 h-16 rounded-2xl bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center text-indigo-300 text-2xl mb-4 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-flask-vial"></i>
+                            </div>
+                            <span class="text-xs font-semibold text-indigo-300 uppercase tracking-widest mb-1">รายการที่ 2</span>
+                            <h3 class="text-base font-bold text-white mb-2">สถานการณ์จำลองแรง</h3>
+                            <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                                เวกเตอร์, แรงลัพธ์, แรงเสียดทาน, กฎนิวตัน(แอปเปิ้ล), และแรงพยุง (+50 XP)
+                            </p>
+                            <span class="mt-auto px-4 py-2 rounded-xl bg-white/10 text-xs font-medium text-indigo-200 group-hover:bg-indigo-500 group-hover:text-white transition-colors flex items-center gap-2">
+                                เริ่มทดลอง <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                            </span>
+                        </div>
+
+                        <!-- รายการที่ 3 -->
+                        <div onclick="switchScreen('mode3')" class="glass-card p-6 rounded-3xl flex flex-col items-center text-center cursor-pointer group">
+                            <div class="w-16 h-16 rounded-2xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-300 text-2xl mb-4 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-award"></i>
+                            </div>
+                            <span class="text-xs font-semibold text-amber-300 uppercase tracking-widest mb-1">รายการที่ 3</span>
+                            <h3 class="text-base font-bold text-white mb-2">คลังข้อสอบ 15 ข้อ</h3>
+                            <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                                แบบทดสอบสุ่มคำถามพร้อมปุ่ม Hint (หัก 10 XP) สะสมสายฟ้า ⚡ (+100 XP)
+                            </p>
+                            <span class="mt-auto px-4 py-2 rounded-xl bg-white/10 text-xs font-medium text-amber-200 group-hover:bg-amber-500 group-hover:text-white transition-colors flex items-center gap-2">
+                                ทำข้อสอบ <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                            </span>
+                        </div>
+
+                        <!-- รายการที่ 4 (เกมส์คำตอบสายฟ้า & แข่งรถพลังงาน) -->
+                        <div onclick="switchScreen('mode4')" class="glass-card p-6 rounded-3xl flex flex-col items-center text-center cursor-pointer group border-2 border-yellow-500/30">
+                            <div class="w-16 h-16 rounded-2xl bg-yellow-500/20 border border-yellow-400/40 flex items-center justify-center text-yellow-300 text-2xl mb-4 group-hover:scale-110 transition-transform lightning-glow">
+                                <i class="fa-solid fa-bolt-lightning text-yellow-300"></i>
+                            </div>
+                            <span class="text-xs font-semibold text-yellow-300 uppercase tracking-widest mb-1">รายการที่ 4 (ใหม่)</span>
+                            <h3 class="text-base font-bold text-white mb-2">เกมส์คำตอบสายฟ้าแข่งรถ</h3>
+                            <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                                ตอบคำถามเก็บสายฟ้า ⚡ 10 ข้อ มาใช้เป็นพลังงานขับรถแข่งเข้าเส้นชัย!
+                            </p>
+                            <span class="mt-auto px-4 py-2 rounded-xl bg-yellow-500/20 text-yellow-200 text-xs font-medium group-hover:bg-yellow-500 group-hover:text-slate-950 transition-colors flex items-center gap-2">
+                                เล่นเกมส์คำตอบสายฟ้า <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function switchScreen(screen) {
+            if (gameState.currentScreen === 'mode4') {
+                if (gameState.raceAnimFrame) cancelAnimationFrame(gameState.raceAnimFrame);
+            }
+
+            gameState.currentScreen = screen;
+            if (screen === 'mode1') {
+                gameState.viewedFlashcards.add(gameState.mode1Index);
+            }
+            if (screen === 'mode3') {
+                prepareRandomizedQuiz();
+                gameState.quizIndex = 0;
+                gameState.quizScore = 0;
+                gameState.showHintBox = false;
+                gameState.hintUsedCount = 0;
+            }
+            if (screen === 'mode4') {
+                prepareLightningQuizGame();
+            }
+            renderScreen();
+        }
+
+        // --- Mode 1: Flashcards ---
+        function renderMode1Screen() {
+            gameState.viewedFlashcards.add(gameState.mode1Index);
+            const card = flashcardsData[gameState.mode1Index];
+            const total = flashcardsData.length;
+
+            return `
+                <div class="w-full max-w-2xl mx-auto flex flex-col items-center">
+                    <div class="w-full flex items-center justify-between mb-4">
+                        <button onclick="switchScreen('menu')" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-medium flex items-center gap-2 transition-colors">
+                            <i class="fa-solid fa-arrow-left"></i> กลับเมนูหลัก
+                        </button>
+                        <span class="text-xs font-semibold text-cyan-300">คำสำคัญ ${gameState.mode1Index + 1} / ${total} (ศึกษาแล้ว ${gameState.viewedFlashcards.size}/${total})</span>
+                    </div>
+
+                    <div class="w-full h-88 md:h-96 perspective-1000 cursor-pointer mb-6" onclick="flipCardElement(this)">
+                        <div id="flashcard-inner" class="relative w-full h-full rounded-3xl transform-style-3d shadow-2xl">
+                            <div class="absolute inset-0 w-full h-full glass-panel rounded-3xl p-8 flex flex-col items-center justify-center text-center backface-hidden border-2 border-cyan-500/30">
+                                <span class="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 text-xs mb-3">${card.category}</span>
+                                <div class="w-20 h-20 rounded-2xl bg-gradient-to-tr from-cyan-500/30 to-indigo-500/30 flex items-center justify-center text-cyan-300 text-3xl mb-4 shadow-inner">
+                                    <i class="fa-solid ${card.icon}"></i>
+                                </div>
+                                <h3 class="text-xl md:text-2xl font-bold text-white mb-2 px-2">${card.title}</h3>
+                                <p class="text-xs text-cyan-200/70 animate-pulse mt-4"><i class="fa-solid fa-hand-pointer mr-1"></i> คลิกที่การ์ดเพื่อดูความหมาย สูตร และตัวอย่าง</p>
+                            </div>
+
+                            <div class="absolute inset-0 w-full h-full glass-panel rounded-3xl p-6 md:p-8 flex flex-col justify-center text-left backface-hidden rotate-y-180 border-2 border-indigo-500/30 bg-slate-900/95 overflow-y-auto">
+                                <div class="text-center mb-3">
+                                    <span class="px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-[11px]">รายละเอียดคำสำคัญ</span>
+                                    <h4 class="text-lg font-bold text-cyan-300 mt-1">${card.title}</h4>
+                                </div>
+                                <div class="space-y-2 text-xs md:text-sm text-slate-200 font-light">
+                                    <p><b>📖 ความหมาย:</b> ${card.meaning}</p>
+                                    <p><b>📐 สูตร/หลักการ:</b> <code class="bg-white/10 px-2 py-0.5 rounded text-cyan-200 font-mono">${card.formula}</code></p>
+                                    <p><b>🌟 ตัวอย่าง:</b> ${card.example}</p>
+                                </div>
+                                <p class="text-center text-[10px] text-indigo-200/70 mt-4"><i class="fa-solid fa-rotate-right mr-1"></i> คลิกอีกครั้งเพื่อพลิกกลับหน้าหลัก</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between w-full">
+                        <button onclick="prevCard()" class="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-medium flex items-center gap-2 transition-colors ${gameState.mode1Index === 0 ? 'opacity-50 cursor-not-allowed' : ''}">
+                            <i class="fa-solid fa-chevron-left"></i> ก่อนหน้า
+                        </button>
+                        <div class="flex gap-1.5 max-w-[200px] overflow-x-auto py-1">
+                            ${flashcardsData.map((_, i) => `<div class="h-2 rounded-full transition-all ${i === gameState.mode1Index ? 'w-6 bg-cyan-400' : gameState.viewedFlashcards.has(i) ? 'w-2 bg-cyan-600' : 'w-2 bg-white/20'}"></div>`).join('')}
+                        </div>
+                        <button onclick="nextCard()" class="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-medium flex items-center gap-2 transition-colors ${gameState.mode1Index === total - 1 ? 'opacity-50 cursor-not-allowed' : ''}">
+                            ถัดไป <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function flipCardElement(el) {
+            const inner = el.querySelector('#flashcard-inner');
+            inner.classList.toggle('rotate-y-180');
+        }
+
+        function nextCard() {
+            if (gameState.mode1Index < flashcardsData.length - 1) {
+                gameState.mode1Index++;
+                renderScreen();
+            }
+        }
+
+        function prevCard() {
+            if (gameState.mode1Index > 0) {
+                gameState.mode1Index--;
+                renderScreen();
+            }
+        }
+
+        // --- Mode 2: Simulation Dashboard ---
+        function renderMode2Screen() {
+            gameState.simsTested.add(gameState.simSubTab);
+
+            return `
+                <div class="w-full max-w-4xl mx-auto">
+                    <div class="w-full flex items-center justify-between mb-4">
+                        <button onclick="switchScreen('menu')" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-medium flex items-center gap-2 transition-colors">
+                            <i class="fa-solid fa-arrow-left"></i> กลับเมนูหลัก
+                        </button>
+                        <span class="text-xs font-semibold text-indigo-300">ห้องเรียนครูปลานุ่น: สถานการณ์จำลองปัจจัยแรง (ทดลองแล้ว ${gameState.simsTested.size}/5 หัวข้อ)</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-2 mb-4">
+                        <button onclick="setSimSubTab('vector')" class="py-2.5 px-2 rounded-2xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${gameState.simSubTab === 'vector' ? 'bg-cyan-500 text-white shadow-lg' : 'glass-panel text-cyan-200 hover:bg-white/10'}">
+                            <i class="fa-solid fa-compass-drafting"></i> 1. เวกเตอร์
+                        </button>
+                        <button onclick="setSimSubTab('netforce')" class="py-2.5 px-2 rounded-2xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${gameState.simSubTab === 'netforce' ? 'bg-indigo-500 text-white shadow-lg' : 'glass-panel text-indigo-200 hover:bg-white/10'}">
+                            <i class="fa-solid fa-arrows-split-up-and-left"></i> 2. แรงลัพธ์
+                        </button>
+                        <button onclick="setSimSubTab('friction')" class="py-2.5 px-2 rounded-2xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${gameState.simSubTab === 'friction' ? 'bg-amber-500 text-white shadow-lg' : 'glass-panel text-amber-200 hover:bg-white/10'}">
+                            <i class="fa-solid fa-hand"></i> 3. แรงเสียดทาน
+                        </button>
+                        <button onclick="setSimSubTab('newton')" class="py-2.5 px-2 rounded-2xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${gameState.simSubTab === 'newton' ? 'bg-purple-500 text-white shadow-lg' : 'glass-panel text-purple-200 hover:bg-white/10'}">
+                            <i class="fa-solid fa-apple-whole"></i> 4. กฎนิวตัน
+                        </button>
+                        <button onclick="setSimSubTab('fluid')" class="py-2.5 px-2 rounded-2xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${gameState.simSubTab === 'fluid' ? 'bg-emerald-500 text-white shadow-lg' : 'glass-panel text-emerald-200 hover:bg-white/10'}">
+                            <i class="fa-solid fa-water"></i> 5. แรงพยุง
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="glass-panel p-6 rounded-3xl flex flex-col gap-4 lg:col-span-1" id="sim-controls">
+                            ${renderSimControlsHTML()}
+                        </div>
+
+                        <div class="glass-panel p-6 rounded-3xl flex flex-col items-center justify-center lg:col-span-2 relative overflow-hidden">
+                            <div class="absolute top-4 left-6 flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span>
+                                <span class="text-xs text-slate-300" id="sim-title-label">สถานการณ์จำลองฟิสิกส์</span>
+                            </div>
+
+                            <canvas id="sim-canvas" width="560" height="280" class="w-full h-auto bg-slate-950/70 rounded-2xl border border-white/10 shadow-inner mt-6"></canvas>
+
+                            <div id="sim-external-desc" class="w-full mt-3 p-3 rounded-2xl bg-white/5 border border-white/10 text-xs text-cyan-200 text-center">
+                                คำอธิบายสถานการณ์จำลอง
+                            </div>
+
+                            <div class="flex gap-3 mt-4" id="sim-action-buttons">
+                                <button onclick="resetSimulationState()" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-medium flex items-center gap-2 transition-colors">
+                                    <i class="fa-solid fa-rotate-left"></i> รีเซ็ตค่า
+                                </button>
+                                <button onclick="runSimAnimation()" class="px-5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:opacity-95 text-xs font-bold text-white flex items-center gap-2 shadow-lg transition-all">
+                                    <i class="fa-solid fa-play"></i> เล่นภาพจำลองใหม่
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function setSimSubTab(tab) {
+            gameState.simSubTab = tab;
+            gameState.simsTested.add(tab);
+            renderScreen();
+        }
+
+        function renderSimControlsHTML() {
+            if (gameState.simSubTab === 'vector') {
+                return `
+                    <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-compass-drafting text-cyan-400"></i> ระบุขนาด F1 และ F2 เอง
+                    </h3>
+                    <div class="space-y-2">
+                        <label class="block text-xs text-slate-300">รูปแบบการรวมเวกเตอร์</label>
+                        <select id="sel-vector-mode" onchange="gameState.vectorMode = this.value; initSimulationCanvas();" class="glass-input w-full p-2.5 rounded-xl text-xs">
+                            <option value="headtail" ${gameState.vectorMode === 'headtail' ? 'selected' : ''}>แบบหัวต่อหาง (Head-to-Tail)</option>
+                            <option value="parallelogram" ${gameState.vectorMode === 'parallelogram' ? 'selected' : ''}>แบบสี่เหลี่ยมด้านขนาน (หางต่อหาง)</option>
+                        </select>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="block text-xs text-cyan-300">พิมพ์ขนาดแรงที่ 1 (F1: 10 - 80 N)</label>
+                        <input type="number" id="num-f1" min="10" max="80" value="${gameState.vec1Mag}" oninput="updateVectorMag()" class="glass-input w-full p-2.5 rounded-xl text-xs font-bold text-cyan-300">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="block text-xs text-indigo-300">พิมพ์ขนาดแรงที่ 2 (F2: 10 - 80 N)</label>
+                        <input type="number" id="num-f2" min="10" max="80" value="${gameState.vec2Mag}" oninput="updateVectorMag()" class="glass-input w-full p-2.5 rounded-xl text-xs font-bold text-indigo-300">
+                    </div>
+                    <div class="bg-cyan-950/80 p-3 rounded-2xl border border-cyan-500/40 text-[11px] text-cyan-200">
+                        📐 <b>ป้ายกำกับติดเส้นแรง:</b> ป้ายชื่อ F1 และ แรงลัพธ์ จะแสดงตรงเส้นแรงพอดี เพื่อให้อ่านง่ายและแม่นยำ
+                    </div>
+                `;
+            } else if (gameState.simSubTab === 'netforce') {
+                return `
+                    <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-arrows-split-up-and-left text-indigo-400"></i> แรงลัพธ์ (กล่องดันสู้กัน)
+                    </h3>
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-cyan-300">แรงขวา (F<sub>right</sub>)</span>
+                            <span id="nr-val" class="font-bold text-cyan-300">${gameState.netRight} N</span>
+                        </div>
+                        <input type="range" min="0" max="100" value="${gameState.netRight}" oninput="gameState.netRight=parseInt(this.value); document.getElementById('nr-val').innerText=this.value+' N'; initSimulationCanvas();" class="w-full accent-cyan-400 bg-white/20 rounded-lg h-2 cursor-pointer">
+                    </div>
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-rose-300">แรงซ้าย (F<sub>left</sub>)</span>
+                            <span id="nl-val" class="font-bold text-rose-300">${gameState.netLeft} N</span>
+                        </div>
+                        <input type="range" min="0" max="100" value="${gameState.netLeft}" oninput="gameState.netLeft=parseInt(this.value); document.getElementById('nl-val').innerText=this.value+' N'; initSimulationCanvas();" class="w-full accent-rose-400 bg-white/20 rounded-lg h-2 cursor-pointer">
+                    </div>
+                    <div class="bg-indigo-950/80 p-3 rounded-2xl border border-indigo-500/40 text-[11px] text-indigo-200">
+                        📐 <b>Hint สูตรแรงลัพธ์:</b> <code class="text-indigo-300 font-mono">F_net = F_right - F_left</code>
+                    </div>
+                `;
+            } else if (gameState.simSubTab === 'friction') {
+                return `
+                    <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-hand text-amber-400"></i> แรงเสียดทานและพื้นผิว 4 แบบ
+                    </h3>
+                    <div class="space-y-2">
+                        <label class="block text-xs text-slate-300">เลือกประเภทพื้นผิว</label>
+                        <select id="sel-surface" onchange="gameState.surfaceType=this.value; initSimulationCanvas();" class="glass-input w-full p-2.5 rounded-xl text-xs">
+                            <option value="ice" ${gameState.surfaceType === 'ice' ? 'selected' : ''}>1. น้ำแข็ง / กระจก (μ = 0.05 ลื่นมาก)</option>
+                            <option value="wood" ${gameState.surfaceType === 'wood' ? 'selected' : ''}>2. พื้นไม้ขัดเรียบ (μ = 0.30 ปานกลาง)</option>
+                            <option value="concrete" ${gameState.surfaceType === 'concrete' ? 'selected' : ''}>3. พื้นคอนกรีตขรุขระ (μ = 0.60 ฝืด)</option>
+                            <option value="rough" ${gameState.surfaceType === 'rough' ? 'selected' : ''}>4. พื้นทราย / ยางมะตอย (μ = 0.85 ฝืดมาก)</option>
+                        </select>
+                    </div>
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-amber-300">แรงดึงวัตถุ (Applied Force)</span>
+                            <span id="af-val" class="font-bold text-amber-300">${gameState.appliedForce} N</span>
+                        </div>
+                        <input type="range" min="10" max="100" value="${gameState.appliedForce}" oninput="gameState.appliedForce=parseInt(this.value); document.getElementById('af-val').innerText=this.value+' N'; initSimulationCanvas();" class="w-full accent-amber-400 bg-white/20 rounded-lg h-2 cursor-pointer">
+                    </div>
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-slate-300">แรงกดปกติ (Normal Force - N)</span>
+                            <span id="nf-val" class="font-bold text-slate-200">${gameState.normalForce} N</span>
+                        </div>
+                        <input type="range" min="20" max="100" value="${gameState.normalForce}" oninput="gameState.normalForce=parseInt(this.value); document.getElementById('nf-val').innerText=this.value+' N'; initSimulationCanvas();" class="w-full accent-slate-400 bg-white/20 rounded-lg h-2 cursor-pointer">
+                    </div>
+                    <div class="bg-amber-950/80 p-3 rounded-2xl border border-amber-500/40 text-[11px] text-amber-200">
+                        📐 <b>Hint สูตรแรงเสียดทาน:</b> <code class="text-amber-300 font-mono">f = μ × N</code>
+                    </div>
+                `;
+            } else if (gameState.simSubTab === 'newton') {
+                return `
+                    <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-apple-whole text-red-400"></i> กฎนิวตัน (ภาพแอปเปิ้ล)
+                    </h3>
+                    <div class="space-y-2">
+                        <label class="block text-xs text-slate-300">เลือกกฎของนิวตัน</label>
+                        <select id="sel-newton-rule" onchange="gameState.newtonRule=parseInt(this.value); initSimulationCanvas();" class="glass-input w-full p-2.5 rounded-xl text-xs">
+                            <option value="1" ${gameState.newtonRule === 1 ? 'selected' : ''}>กฎข้อที่ 1 (ความเฉื่อย)</option>
+                            <option value="2" ${gameState.newtonRule === 2 ? 'selected' : ''}>กฎข้อที่ 2 (F = ma)</option>
+                            <option value="3" ${gameState.newtonRule === 3 ? 'selected' : ''}>กฎข้อที่ 3 (แรงกิริยา - ปฏิกิริยา)</option>
+                        </select>
+                    </div>
+                    <div class="bg-purple-950/80 p-3 rounded-2xl border border-purple-500/40 text-[11px] text-purple-200">
+                        🍎 <b>จำลองด้วยแอปเปิ้ล:</b> แสดงกฎการเคลื่อนที่ทั้ง 3 ข้อของนิวตันผ่านวัตถุรูปแอปเปิ้ลสื่อการเรียนรู้เข้าใจง่าย
+                    </div>
+                `;
+            } else {
+                return `
+                    <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-water text-emerald-400"></i> แรงพยุง (W vs Fb)
+                    </h3>
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-rose-300">น้ำหนักวัตถุ (W)</span>
+                            <span id="w-val" class="font-bold text-rose-300">${gameState.objWeight} N</span>
+                        </div>
+                        <input type="range" min="10" max="100" value="${gameState.objWeight}" oninput="gameState.objWeight=parseInt(this.value); document.getElementById('w-val').innerText=this.value+' N'; initSimulationCanvas();" class="w-full accent-rose-400 bg-white/20 rounded-lg h-2 cursor-pointer">
+                    </div>
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-cyan-300">แรงพยุงน้ำ (Fb)</span>
+                            <span id="fb-val" class="font-bold text-cyan-300">${gameState.buoyantForce} N</span>
+                        </div>
+                        <input type="range" min="10" max="100" value="${gameState.buoyantForce}" oninput="gameState.buoyantForce=parseInt(this.value); document.getElementById('fb-val').innerText=this.value+' N'; initSimulationCanvas();" class="w-full accent-cyan-400 bg-white/20 rounded-lg h-2 cursor-pointer">
+                    </div>
+                    <div class="bg-emerald-950/80 p-3 rounded-2xl border border-emerald-500/40 text-[11px] text-emerald-200">
+                        📐 <b>Hint แรงพยุง:</b> <br>
+                        • จม: <code class="text-emerald-300 font-mono">W > Fb</code><br>
+                        • ลอย: <code class="text-emerald-300 font-mono">W < Fb</code><br>
+                        • ปริ่มน้ำ: <code class="text-emerald-300 font-mono">W = Fb</code>
+                    </div>
+                `;
+            }
+        }
+
+        function updateVectorMag() {
+            const f1Input = document.getElementById('num-f1');
+            const f2Input = document.getElementById('num-f2');
+            if (f1Input && f2Input) {
+                let val1 = parseInt(f1Input.value) || 10;
+                let val2 = parseInt(f2Input.value) || 10;
+                gameState.vec1Mag = Math.max(10, Math.min(80, val1));
+                gameState.vec2Mag = Math.max(10, Math.min(80, val2));
+                initSimulationCanvas();
+            }
+        }
+
+        let simAnimFrame = null;
+        let simProgress = 0;
+
+        function initSimulationCanvas() {
+            const canvas = document.getElementById('sim-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            simProgress = 0;
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                if (gameState.simSubTab === 'vector') {
+                    document.getElementById('sim-title-label').innerText = "การจำลองการรวมเวกเตอร์แรง (ป้ายชื่อตรงเส้นแรง)";
+                    drawVectorSimulation(ctx, canvas, 1);
+                } else if (gameState.simSubTab === 'netforce') {
+                    document.getElementById('sim-title-label').innerText = "สถานการณ์จำลองแรงลัพธ์ (รองรับบวก, ลบ และศูนย์)";
+                    drawNetForceSimulation(ctx, canvas, 1);
+                } else if (gameState.simSubTab === 'friction') {
+                    document.getElementById('sim-title-label').innerText = "สถานการณ์จำลองแรงเสียดทานและพื้นผิว 4 แบบ";
+                    drawFrictionSimulation(ctx, canvas, 1);
+                } else if (gameState.simSubTab === 'newton') {
+                    document.getElementById('sim-title-label').innerText = "การจำลองกฎการเคลื่อนที่นิวตัน (รูปแอปเปิ้ล)";
+                    drawNewtonSimulation(ctx, canvas, 1);
+                } else {
+                    document.getElementById('sim-title-label').innerText = "การจำลองแรงพยุงเปรียบเทียบน้ำหนักวัตถุ";
+                    drawFluidSimulation(ctx, canvas, 1);
+                }
+            }
+            draw();
+        }
+
+        function runSimAnimation() {
+            simProgress = 0;
+            const canvas = document.getElementById('sim-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            function animateLoop() {
+                simProgress += 0.03;
+                if (simProgress > 1) simProgress = 1;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                if (gameState.simSubTab === 'vector') {
+                    drawVectorSimulation(ctx, canvas, simProgress);
+                } else if (gameState.simSubTab === 'netforce') {
+                    drawNetForceSimulation(ctx, canvas, simProgress);
+                } else if (gameState.simSubTab === 'friction') {
+                    drawFrictionSimulation(ctx, canvas, simProgress);
+                } else if (gameState.simSubTab === 'newton') {
+                    drawNewtonSimulation(ctx, canvas, simProgress);
+                } else {
+                    drawFluidSimulation(ctx, canvas, simProgress);
+                }
+
+                if (simProgress < 1) {
+                    simAnimFrame = requestAnimationFrame(animateLoop);
+                }
+            }
+            if (simAnimFrame) cancelAnimationFrame(simAnimFrame);
+            animateLoop();
+        }
+
+        function resetSimulationState() {
+            simProgress = 0;
+            initSimulationCanvas();
+        }
+
+        function drawArrowVector(ctx, fx, fy, tx, ty, color, label, labelPosition = 'middle') {
+            const headLen = 8;
+            const angle = Math.atan2(ty - fy, tx - fx);
+            ctx.strokeStyle = color;
+            ctx.fillStyle = color;
+            ctx.lineWidth = 3;
+
+            ctx.beginPath(); ctx.moveTo(fx, fy); ctx.lineTo(tx, ty); ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(tx, ty);
+            ctx.lineTo(tx - headLen * Math.cos(angle - Math.PI/6), ty - headLen * Math.sin(angle - Math.PI/6));
+            ctx.lineTo(tx - headLen * Math.cos(angle + Math.PI/6), ty - headLen * Math.sin(angle + Math.PI/6));
+            ctx.fill();
+
+            if (label) {
+                ctx.font = '11px Prompt';
+                ctx.fillStyle = '#f8fafc';
+                let lx = (fx + tx)/2;
+                let ly = (fy + ty)/2;
+                if (labelPosition === 'f1') {
+                    lx = fx + (tx - fx) * 0.4;
+                    ly = fy + (ty - fy) * 0.4 - 10;
+                } else if (labelPosition === 'resultant') {
+                    lx = fx + (tx - fx) * 0.6;
+                    ly = fy + (ty - fy) * 0.6 + 15;
+                } else {
+                    ly -= 10;
+                }
+                ctx.fillText(label, lx, ly);
+            }
+        }
+
+        function drawRuler(ctx, canvas) {
+            const startX = 40;
+            const rulerY = canvas.height - 25;
+            const totalUnits = 12;
+            const unitWidth = 35;
+
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+            ctx.lineWidth = 1;
+
+            ctx.beginPath();
+            ctx.moveTo(startX, rulerY);
+            ctx.lineTo(startX + totalUnits * unitWidth, rulerY);
+            ctx.stroke();
+
+            ctx.font = '10px Prompt';
+            ctx.fillText("ไม้บรรทัดสเกลแรง (1 ช่อง = 10 N):", startX, rulerY - 12);
+
+            for (let i = 0; i <= totalUnits; i++) {
+                let rx = startX + i * unitWidth;
+                let tickH = (i % 5 === 0) ? 8 : 4;
+                ctx.beginPath();
+                ctx.moveTo(rx, rulerY);
+                ctx.lineTo(rx, rulerY + tickH);
+                ctx.stroke();
+
+                if (i % 2 === 0) {
+                    ctx.fillText(i * 10, rx - 6, rulerY + 18);
+                }
+            }
+        }
+
+        function drawVectorSimulation(ctx, canvas, prog = 1) {
+            const startX = 50;
+            const startY = 160;
+            const f1 = gameState.vec1Mag;
+            const f2 = gameState.vec2Mag;
+
+            ctx.fillStyle = '#090d16';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            drawRuler(ctx, canvas);
+
+            ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+            for (let i = 0; i < canvas.width; i += 30) {
+                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height - 40); ctx.stroke();
+            }
+
+            const scale = 3.5;
+
+            if (gameState.vectorMode === 'headtail') {
+                const end1X = startX + f1 * scale * prog;
+                const end1Y = startY;
+                drawArrowVector(ctx, startX, startY, end1X, end1Y, '#38bdf8', `F₁ = ${f1} N`, 'f1');
+
+                if (prog >= 0.5) {
+                    const prog2 = (prog - 0.5) * 2;
+                    const end2X = end1X + f2 * scale * 0.7 * prog2;
+                    const end2Y = end1Y - f2 * scale * 0.7 * prog2;
+                    drawArrowVector(ctx, end1X, end1Y, end2X, end2Y, '#818cf8', `F₂ = ${f2} N`, 'middle');
+
+                    if (prog >= 0.9) {
+                        const resultant = Math.round(Math.sqrt(f1*f1 + f2*f2));
+                        drawArrowVector(ctx, startX, startY, end2X, end2Y, '#34d399', `แรงลัพธ์ (R) = ${resultant} N`, 'resultant');
+                        document.getElementById('sim-external-desc').innerHTML = `
+                            ✅ <b>แบบหัวต่อหาง:</b> ป้ายชื่อ F₁ และ แรงลัพธ์ วางทาบตรงเส้นแรงพอดี | แรงลัพธ์ R = √(F₁² + F₂²) ≈ <b>${resultant} N</b>
+                        `;
+                    }
+                } else {
+                    document.getElementById('sim-external-desc').innerHTML = `📌 กำลังแสดงแรงที่ 1 (F₁ = ${f1} N) ตรงเส้นแรง`;
+                }
+            } else {
+                const end1X = startX + f1 * scale * prog;
+                const end1Y = startY;
+                const end2X = startX + f2 * scale * 0.6 * prog;
+                const end2Y = startY - f2 * scale * 0.6 * prog;
+
+                drawArrowVector(ctx, startX, startY, end1X, end1Y, '#38bdf8', `F₁ = ${f1} N`, 'f1');
+                drawArrowVector(ctx, startX, startY, end2X, end2Y, '#818cf8', `F₂ = ${f2} N`, 'middle');
+
+                if (prog >= 0.7) {
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+                    ctx.lineWidth = 1.5;
+                    ctx.setLineDash([5, 5]);
+
+                    ctx.beginPath();
+                    ctx.moveTo(end1X, end1Y);
+                    ctx.lineTo(end1X + (end2X - startX), end1Y + (end2Y - startY));
+                    ctx.stroke();
+
+                    ctx.beginPath();
+                    ctx.moveTo(end2X, end2Y);
+                    ctx.lineTo(end1X + (end2X - startX), end1Y + (end2Y - startY));
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+
+                    const resultant = Math.round(Math.sqrt(f1*f1 + f2*f2));
+                    drawArrowVector(ctx, startX, startY, end1X + (end2X - startX), end1Y + (end2Y - startY), '#34d399', `แรงลัพธ์ (เส้นทแยงมุม) = ${resultant} N`, 'resultant');
+                    document.getElementById('sim-external-desc').innerHTML = `
+                        ✅ <b>แบบสี่เหลี่ยมด้านขนาน:</b> แรงลัพธ์อยู่บนเส้นทแยงมุม R ≈ <b>${resultant} N</b>
+                    `;
+                } else {
+                    document.getElementById('sim-external-desc').innerHTML = `📌 กำลังแสดงหางต่อหางของ F₁ และ F₂`;
+                }
+            }
+        }
+
+        function drawNetForceSimulation(ctx, canvas, prog = 0) {
+            ctx.fillStyle = '#090d16';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#334155';
+            ctx.fillRect(0, 220, canvas.width, 60);
+
+            const fRight = gameState.netRight;
+            const fLeft = gameState.netLeft;
+            const net = fRight - fLeft;
+
+            let boxX = 220;
+            if (net !== 0) {
+                boxX += Math.sign(net) * prog * 50;
+            }
+
+            ctx.fillStyle = '#6366f1';
+            ctx.roundRect(boxX, 150, 70, 70, 10);
+            ctx.fill();
+            ctx.fillStyle = 'white';
+            ctx.font = '12px Prompt';
+            ctx.fillText("กล่อง ม.2", boxX + 12, 190);
+
+            if (fRight > 0) {
+                drawArrowVector(ctx, boxX + 70, 185, boxX + 70 + fRight * 1.0, 185, '#38bdf8', `F_right = ${fRight} N`);
+            }
+            if (fLeft > 0) {
+                drawArrowVector(ctx, boxX, 185, boxX - fLeft * 1.0, 185, '#f43f5e', `F_left = ${fLeft} N`);
+            }
+
+            let caseTitle = "";
+            let motionText = "";
+            if (net > 0) {
+                caseTitle = "กรณีที่ 1: แรงลัพธ์เป็นบวก (+)";
+                motionText = `แรงลัพธ์ (F_net) = +${net} N มีทิศทางไปทางขวา กล่องเคลื่อนที่ไปข้างหน้า`;
+            } else if (net < 0) {
+                caseTitle = "กรณีที่ 2: แรงลัพธ์เป็นลบ (-)";
+                motionText = `แรงลัพธ์ (F_net) = ${net} N มีทิศทางไปทางซ้าย กล่องเคลื่อนที่ถอยหลัง`;
+            } else {
+                caseTitle = "กรณีที่ 3: แรงลัพธ์เป็นศูนย์ (0)";
+                motionText = `แรงลัพธ์ (F_net) = 0 N วัตถุสมดุล อยู่นิ่งหรือเคลื่อนที่ด้วยความเร็วคงที่`;
+            }
+
+            document.getElementById('sim-external-desc').innerHTML = `<b>${caseTitle}</b><br>${motionText}`;
+        }
+
+        function drawFrictionSimulation(ctx, canvas, prog = 0) {
+            ctx.fillStyle = '#090d16';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            let mu = 0.3;
+            let surfaceName = "พื้นไม้ขัดเรียบ";
+            let surfaceColor = "#78350f";
+
+            if (gameState.surfaceType === 'ice') { 
+                mu = 0.05; surfaceName = "1. น้ำแข็ง / กระจก (ลื่นมาก)"; surfaceColor = "#1e3a8a"; 
+            } else if (gameState.surfaceType === 'wood') { 
+                mu = 0.30; surfaceName = "2. พื้นไม้ขัดเรียบ (ปานกลาง)"; surfaceColor = "#78350f"; 
+            } else if (gameState.surfaceType === 'concrete') { 
+                mu = 0.60; surfaceName = "3. พื้นคอนกรีตขรุขระ (ฝืด)"; surfaceColor = "#475569"; 
+            } else if (gameState.surfaceType === 'rough') { 
+                mu = 0.85; surfaceName = "4. พื้นทราย / ยางมะตอย (ฝืดมาก)"; surfaceColor = "#1e293b"; 
+            }
+
+            ctx.fillStyle = surfaceColor;
+            ctx.fillRect(0, 210, canvas.width, 70);
+
+            ctx.fillStyle = 'rgba(255,255,255,0.15)';
+            if (gameState.surfaceType === 'ice') {
+                for (let i = 20; i < canvas.width; i += 50) {
+                    ctx.fillRect(i, 225, 25, 4);
+                }
+            } else if (gameState.surfaceType === 'concrete') {
+                for (let i = 10; i < canvas.width; i += 25) {
+                    ctx.fillRect(i, 220 + (i%3)*10, 6, 6);
+                }
+            } else if (gameState.surfaceType === 'rough') {
+                for (let i = 5; i < canvas.width; i += 15) {
+                    ctx.fillRect(i, 215 + (i%5)*8, 10, 10);
+                }
+            }
+
+            const normalF = gameState.normalForce;
+            const frictionF = Math.round(mu * normalF);
+            const applied = gameState.appliedForce;
+            const netF = applied - frictionF;
+
+            let boxX = 200;
+            if (netF > 0) {
+                let slipFactor = 1.0 - mu;
+                boxX += prog * 80 * Math.max(0.2, slipFactor);
+            }
+
+            ctx.fillStyle = '#f59e0b';
+            ctx.roundRect(boxX, 140, 70, 70, 8);
+            ctx.fill();
+            ctx.fillStyle = '#000';
+            ctx.font = '12px Prompt';
+            ctx.fillText("วัตถุ", boxX + 22, 180);
+
+            drawArrowVector(ctx, boxX + 70, 165, boxX + 70 + applied * 0.9, 165, '#38bdf8', `แรงดึง = ${applied} N`);
+            drawArrowVector(ctx, boxX, 185, boxX - frictionF * 1.2, 185, '#ef4444', `แรงเสียดทาน (f=${frictionF}N)`);
+
+            document.getElementById('sim-external-desc').innerHTML = `
+                📍 <b>พื้นผิว:</b> ${surfaceName} (μ = ${mu}) | แรงกด (N) = ${normalF} N<br>
+                ⚖️ <b>แรงเสียดทาน (f = μN):</b> ${mu} × ${normalF} = <b>${frictionF} N</b> | <b>แรงดึง:</b> ${applied} N<br>
+                🚀 <b>ผลลัพธ์:</b> ${applied > frictionF ? `<span class="text-emerald-400 font-bold">แรงดึงชนะแรงเสียดทาน วัตถุเคลื่อนที่ได้</span>` : '<span class="text-rose-400 font-bold">แรงดึงยังน้อยกว่าแรงเสียดทาน วัตถุนิ่งอยู่กับที่</span>'}
+            `;
+        }
+
+        // --- Newton's Laws Simulation with Apple Graphic ---
+        function drawNewtonSimulation(ctx, canvas, prog = 0) {
+            ctx.fillStyle = '#090d16';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#334155';
+            ctx.fillRect(0, 220, canvas.width, 60);
+
+            const rule = gameState.newtonRule;
+            let descText = "";
+
+            if (rule === 1) {
+                descText = "กฎข้อที่ 1 (ความเฉื่อย): แอปเปิ้ลรักษาสภาพเดิมเพราะแรงลัพธ์เป็นศูนย์ (ΣF = 0)";
+                const appleX = 80 + prog * 200;
+                ctx.fillStyle = '#ef4444';
+                ctx.beginPath(); ctx.arc(appleX, 185, 25, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = '#10b981';
+                ctx.fillRect(appleX - 2, 155, 4, 10);
+                ctx.fillStyle = 'white';
+                ctx.font = '11px Prompt';
+                ctx.fillText("แอปเปิ้ล", appleX - 18, 189);
+            } else if (rule === 2) {
+                descText = "กฎข้อที่ 2 (F = ma): ความเร่ง (a) แปรผันตรงกับแรงลัพธ์ที่มากกระทำต่อแอปเปิ้ล";
+                const appleX = 60 + prog * 280;
+                ctx.fillStyle = '#ef4444';
+                ctx.beginPath(); ctx.arc(appleX, 185, 25, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = '#10b981';
+                ctx.fillRect(appleX - 2, 155, 4, 10);
+                drawArrowVector(ctx, appleX + 25, 185, appleX + 80, 185, '#f59e0b', 'F = ma');
+                ctx.fillStyle = 'white';
+                ctx.font = '11px Prompt';
+                ctx.fillText("แอปเปิ้ล", appleX - 18, 189);
+            } else {
+                descText = "กฎข้อที่ 3 (Action = Reaction): แรงกิริยาและแรงปฏิกิริยาระหว่างแอปเปิ้ลกับพื้น";
+                const appleX = 260;
+                ctx.fillStyle = '#ef4444';
+                ctx.beginPath(); ctx.arc(appleX, 175, 25, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = '#10b981';
+                ctx.fillRect(appleX - 2, 145, 4, 10);
+                drawArrowVector(ctx, appleX, 200, appleX, 240, '#38bdf8', 'แรงปฏิกิริยา (N)');
+                drawArrowVector(ctx, appleX, 150, appleX, 110, '#f43f5e', 'น้ำหนัก (W)');
+                ctx.fillStyle = 'white';
+                ctx.font = '11px Prompt';
+                ctx.fillText("แอปเปิ้ล", appleX - 18, 179);
+            }
+
+            document.getElementById('sim-external-desc').innerText = descText;
+        }
+
+        function drawFluidSimulation(ctx, canvas, prog = 0) {
+            ctx.fillStyle = '#090d16';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = 'rgba(16, 185, 129, 0.2)';
+            ctx.fillRect(160, 80, 240, 160);
+            ctx.strokeStyle = '#34d399';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(160, 80, 240, 160);
+
+            const W = gameState.objWeight;
+            const Fb = gameState.buoyantForce;
+
+            let objY = 130;
+            let statusStr = "";
+
+            if (W > Fb) {
+                objY = 190 + Math.sin(prog * Math.PI) * 2;
+                statusStr = `🛑 <b>วัตถุจม (Sinking):</b> น้ำหนัก W (${W} N) > แรงพยุง Fb (${Fb} N) วัตถุตกลงสู่ก้นภาชนะสนิท`;
+            } else if (W < Fb) {
+                objY = 100 - Math.sin(prog * Math.PI) * 3;
+                statusStr = `⛵ <b>วัตถุลอย (Floating):</b> น้ำหนัก W (${W} N) < แรงพยุง Fb (${Fb} N) วัตถุลอยโผล่พ้นน้ำบางส่วน`;
+            } else {
+                objY = 135;
+                statusStr = `⚖️ <b>วัตถุลอยปริ่มน้ำ (Neutral):</b> น้ำหนัก W (${W} N) = แรงพยุง Fb (${Fb} N) จมมิดพอดีผิวหน้า`;
+            }
+
+            ctx.fillStyle = '#f59e0b';
+            ctx.fillRect(240, objY, 80, 50);
+            ctx.fillStyle = '#000';
+            ctx.font = '12px Prompt';
+            ctx.fillText(`W=${W}N`, 255, objY + 30);
+
+            drawArrowVector(ctx, 280, objY + 25, 280, objY + 55, '#f43f5e', `W = ${W} N`);
+            drawArrowVector(ctx, 280, objY + 25, 280, objY - 15, '#38bdf8', `Fb = ${Fb} N`);
+
+            document.getElementById('sim-external-desc').innerHTML = statusStr;
+        }
+
+        // --- Mode 3: Quiz Screen ---
+        function renderMode3Screen() {
+            const totalQ = quizData.length;
+            if (gameState.quizIndex >= totalQ) {
+                gameState.currentScreen = 'summary';
+                return renderSummaryScreen();
+            }
+
+            const q = quizData[gameState.quizIndex];
+
+            return `
+                <div class="w-full max-w-2xl mx-auto flex flex-col">
+                    <div class="w-full flex items-center justify-between mb-4">
+                        <button onclick="switchScreen('menu')" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-medium flex items-center gap-2 transition-colors">
+                            <i class="fa-solid fa-arrow-left"></i> กลับเมนูหลัก
+                        </button>
+                        <div class="flex items-center gap-3">
+                            <span class="px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-500/30 flex items-center gap-1.5">
+                                <i class="fa-solid fa-bolt text-yellow-400"></i> ${gameState.xp} XP
+                            </span>
+                            <span class="text-xs font-semibold text-cyan-300">ข้อที่ ${gameState.quizIndex + 1} / ${totalQ}</span>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-6 md:p-8 rounded-3xl shadow-2xl relative">
+                        <div class="w-full bg-white/10 h-2 rounded-full mb-6 overflow-hidden">
+                            <div class="bg-gradient-to-r from-cyan-400 to-indigo-500 h-full transition-all duration-300" style="width: ${((gameState.quizIndex + 1) / totalQ) * 100}%"></div>
+                        </div>
+
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-base md:text-lg font-bold text-white leading-relaxed">
+                                ${q.question}
+                            </h3>
+                            <button onclick="toggleQuizHint()" class="px-3 py-1.5 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/40 text-cyan-300 text-xs font-semibold border border-cyan-400/30 flex items-center gap-1.5 transition-colors shrink-0">
+                                <i class="fa-solid fa-lightbulb text-yellow-300"></i> ${gameState.showHintBox ? 'ซ่อนสูตร/Hint' : '💡 ขอสูตร/Hint (-10 XP)'}
+                            </button>
+                        </div>
+
+                        <div id="quiz-hint-box" class="${gameState.showHintBox ? '' : 'hidden'} mb-6 p-4 rounded-2xl bg-indigo-950/80 border border-indigo-400/40 text-xs text-indigo-200 animate-fade-in space-y-2">
+                            <p class="font-bold text-cyan-300 flex items-center gap-1">
+                                <i class="fa-solid fa-graduation-cap"></i> สูตรและหลักการที่เกี่ยวข้อง (หัก 10 XP):
+                            </p>
+                            <p class="leading-relaxed bg-black/30 p-3 rounded-xl border border-white/10">${q.formulaHint}</p>
+                        </div>
+
+                        <div class="space-y-3 mb-6" id="quiz-options-container">
+                            ${q.options.map((opt, idx) => `
+                                <button onclick="handleAnswer(${idx})" id="opt-btn-${idx}" 
+                                    class="w-full text-left p-4 rounded-2xl glass-card hover:bg-white/20 transition-all text-xs md:text-sm font-medium flex items-center gap-3 group">
+                                    <span class="w-7 h-7 rounded-xl bg-white/10 group-hover:bg-cyan-500 group-hover:text-white flex items-center justify-center text-xs font-bold text-cyan-300 transition-colors">
+                                        ${String.fromCharCode(65 + idx)}
+                                    </span>
+                                    <span>${opt}</span>
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleQuizHint() {
+            if (!gameState.showHintBox) {
+                gameState.hintUsedCount++;
+                showToast("เปิด Hint สำเร็จ! หัก -10 XP", "error");
+            }
+            gameState.showHintBox = !gameState.showHintBox;
+            renderScreen();
+        }
+
+        function handleAnswer(selectedIndex) {
+            const q = quizData[gameState.quizIndex];
+            const isCorrect = selectedIndex === q.answer;
+
+            const buttons = document.querySelectorAll('#quiz-options-container button');
+            buttons.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (idx === q.answer) {
+                    btn.classList.remove('glass-card');
+                    btn.classList.add('bg-emerald-500/30', 'border-emerald-400', 'text-white');
+                } else if (idx === selectedIndex && !isCorrect) {
+                    btn.classList.remove('glass-card');
+                    btn.classList.add('bg-rose-500/30', 'border-rose-400', 'text-white');
+                }
+            });
+
+            if (isCorrect) {
+                gameState.quizScore++;
+                gameState.lightningCount++;
+                showQuizPopup(true, q.explanation);
+            } else {
+                showQuizPopup(false, q.explanation);
+            }
+
+            calculateTotalXP();
+            document.getElementById('display-xp').innerText = gameState.xp;
+
+            setTimeout(() => {
+                hideQuizPopup();
+                gameState.quizIndex++;
+                gameState.showHintBox = false;
+                renderScreen();
+            }, 3000);
+        }
+
+        // --- Mode 4: Lightning Quiz & Racing Game ---
+        function renderMode4Screen() {
+            if (gameState.lightningGamePhase === 'playing') {
+                const q = activeLightningQuiz[gameState.lightningQIndex];
+                return `
+                    <div class="w-full max-w-2xl mx-auto flex flex-col items-center">
+                        <div class="w-full flex items-center justify-between mb-4">
+                            <button onclick="switchScreen('menu')" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-medium flex items-center gap-2 transition-colors">
+                                <i class="fa-solid fa-arrow-left"></i> กลับเมนูหลัก
+                            </button>
+                            <span class="text-xs font-semibold text-yellow-300">
+                                <i class="fa-solid fa-bolt text-yellow-400"></i> สายฟ้าสะสม: ${gameState.lightningScore} / 10 | ข้อที่ ${gameState.lightningQIndex + 1} / 10
+                            </span>
+                        </div>
+
+                        <div class="glass-panel p-6 md:p-8 rounded-3xl shadow-2xl w-full relative">
+                            <div class="w-full bg-white/10 h-2 rounded-full mb-6 overflow-hidden">
+                                <div class="bg-gradient-to-r from-yellow-400 to-amber-500 h-full transition-all duration-300" style="width: ${((gameState.lightningQIndex + 1) / 10) * 100}%"></div>
+                            </div>
+
+                            <div class="text-center mb-6">
+                                <span class="px-3.5 py-1 rounded-full bg-yellow-500/20 text-yellow-300 text-xs font-bold border border-yellow-500/30">
+                                    ⚡ คำถามสายฟ้า (ตอบถูกเก็บสายฟ้าเพิ่มพลังรถแข่ง)
+                                </span>
+                                <h3 class="text-lg md:text-xl font-bold text-white mt-3 leading-relaxed">
+                                    ${q.question}
+                                </h3>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                                ${q.options.map((opt, idx) => `
+                                    <button onclick="handleLightningQuizAnswer('${opt.replace(/'/g, "\\'")}')" 
+                                        class="p-4 rounded-2xl glass-card hover:bg-yellow-500/30 hover:border-yellow-400 transition-all text-xs md:text-sm font-medium text-white flex items-center gap-3 group">
+                                        <span class="w-7 h-7 rounded-xl bg-white/10 group-hover:bg-yellow-500 group-hover:text-slate-950 flex items-center justify-center text-xs font-bold text-yellow-300 transition-colors shrink-0">
+                                            ${String.fromCharCode(65 + idx)}
+                                        </span>
+                                        <span class="text-left">${opt}</span>
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (gameState.lightningGamePhase === 'racing') {
+                return `
+                    <div class="w-full max-w-3xl mx-auto flex flex-col items-center">
+                        <div class="w-full flex items-center justify-between mb-4">
+                            <button onclick="switchScreen('menu')" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-medium flex items-center gap-2 transition-colors">
+                                <i class="fa-solid fa-arrow-left"></i> กลับเมนูหลัก
+                            </button>
+                            <span class="text-xs font-semibold text-yellow-300">
+                                ⚡ พลังงานสายฟ้าทั้งหมด: ${gameState.lightningScore} สายฟ้า (+${gameState.lightningScore * 50} XP)
+                            </span>
+                        </div>
+
+                        <div class="glass-panel p-6 rounded-3xl w-full flex flex-col items-center relative overflow-hidden shadow-2xl">
+                            <h3 class="text-lg font-bold text-yellow-300 mb-2">🏎️ รถแข่งพลังงานสายฟ้ากำลังพุ่งทะยานเข้าเส้นชัย!</h3>
+                            <p class="text-xs text-slate-300 mb-6">ใช้สายฟ้าที่ตอบถูกเป็นพลังงานความเร็ว (เก็บได้ ${gameState.lightningScore}/10 สายฟ้า)</p>
+
+                            <canvas id="race-canvas" width="600" height="200" class="w-full h-auto bg-slate-950/80 rounded-2xl border border-white/10 shadow-inner mb-6"></canvas>
+
+                            <button onclick="finishRaceTransition()" class="px-8 py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-amber-600 text-slate-950 font-bold text-sm shadow-lg hover:opacity-95 transition-all">
+                                ดูสรุปผลคะแนนและรับเกียรติบัตร
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function handleLightningQuizAnswer(selectedOpt) {
+            const q = activeLightningQuiz[gameState.lightningQIndex];
+            const isCorrect = (selectedOpt === q.correct);
+
+            if (isCorrect) {
+                gameState.lightningScore++;
+                gameState.lightningCount++;
+                showToast("ถูกต้อง! ⚡ เก็บสายฟ้าสะสมสำเร็จ", "success");
+            } else {
+                showToast("ยังไม่ถูกต้อง! พลังงานสายฟ้าข้อนี้พลาดไป", "error");
+            }
+
+            gameState.lightningQIndex++;
+            if (gameState.lightningQIndex >= 10) {
+                gameState.lightningGamePhase = 'racing';
+            }
+            renderScreen();
+        }
+
+        function initRaceCanvas() {
+            const canvas = document.getElementById('race-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            let carPos = 40;
+            const targetPos = 480 * (gameState.lightningScore / 10) + 40;
+
+            function animateCar() {
+                ctx.fillStyle = '#090d16';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Draw Track & Finish Line
+                ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+                ctx.setLineDash([15, 15]);
+                ctx.beginPath(); ctx.moveTo(0, 100); ctx.lineTo(canvas.width, 100); ctx.stroke();
+                ctx.setLineDash([]);
+
+                ctx.fillStyle = '#eab308';
+                ctx.fillRect(520, 40, 10, 120);
+                ctx.fillStyle = '#fff';
+                ctx.font = '10px Prompt';
+                ctx.fillText("FINISH", 505, 30);
+
+                if (carPos < targetPos) {
+                    carPos += 3;
+                }
+
+                // Draw Car
+                ctx.fillStyle = '#38bdf8';
+                ctx.roundRect(carPos, 80, 70, 35, 10);
+                ctx.fill();
+                ctx.fillStyle = '#1e1b4b';
+                ctx.fillRect(carPos + 15, 68, 40, 16);
+
+                // Wheels
+                ctx.fillStyle = '#0f172a';
+                ctx.beginPath(); ctx.arc(carPos + 18, 115, 9, 0, Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.arc(carPos + 52, 115, 9, 0, Math.PI*2); ctx.fill();
+
+                if (carPos < targetPos) {
+                    gameState.raceAnimFrame = requestAnimationFrame(animateCar);
+                }
+            }
+            animateCar();
+        }
+
+        function finishRaceTransition() {
+            gameState.currentScreen = 'summary';
+            renderScreen();
+        }
+
+        function showQuizPopup(isCorrect, explanation) {
+            const popup = document.getElementById('quiz-popup');
+            const icon = document.getElementById('popup-icon');
+            const title = document.getElementById('popup-title');
+            const desc = document.getElementById('popup-desc');
+            const boxStyle = document.getElementById('popup-box-style');
+
+            if (isCorrect) {
+                icon.className = "w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-3xl mb-4 shadow-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
+                icon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+                title.innerText = "ถูกต้อง! ⚡ +100 XP";
+                title.className = "text-xl font-bold text-emerald-300 mb-2";
+                boxStyle.className = "glass-panel p-6 md:p-8 rounded-3xl max-w-md w-full mx-auto text-center border-2 border-emerald-500/50 shadow-2xl bg-emerald-950/90";
+            } else {
+                icon.className = "w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-3xl mb-4 shadow-lg bg-rose-500/20 text-rose-300 border border-rose-500/40";
+                icon.innerHTML = '<i class="fa-solid fa-circle-xmark"></i>';
+                title.innerText = "ยังไม่ถูกต้อง!";
+                title.className = "text-xl font-bold text-rose-300 mb-2";
+                boxStyle.className = "glass-panel p-6 md:p-8 rounded-3xl max-w-md w-full mx-auto text-center border-2 border-rose-500/50 shadow-2xl bg-rose-950/90";
+            }
+
+            desc.innerHTML = `<b>คำอธิบาย:</b> ${explanation}`;
+            popup.classList.remove('hidden');
+        }
+
+        function hideQuizPopup() {
+            const popup = document.getElementById('quiz-popup');
+            popup.classList.add('hidden');
+        }
+
+        // --- Summary Screen with Certificate ---
+        function renderSummaryScreen() {
+            const totalQ = quizData.length;
+            const percentage = Math.round((gameState.quizScore / totalQ) * 100);
+            calculateTotalXP();
+
+            return `
+                <div class="w-full max-w-3xl mx-auto flex flex-col items-center animate-fade-in space-y-6">
+                    <div class="w-full flex items-center justify-between">
+                        <button onclick="switchScreen('menu')" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-medium flex items-center gap-2 transition-colors">
+                            <i class="fa-solid fa-arrow-left"></i> กลับเมนูหลัก
+                        </button>
+                        <span class="text-xs font-semibold text-yellow-300"><i class="fa-solid fa-bolt mr-1"></i> คะแนน XP รวม: ${gameState.xp} XP</span>
+                    </div>
+
+                    <div class="w-full certificate-box p-8 md:p-10 rounded-3xl shadow-2xl text-center relative overflow-hidden">
+                        <div class="absolute -right-10 -bottom-10 text-yellow-600/10 text-9xl pointer-events-none">
+                            <i class="fa-solid fa-award"></i>
+                        </div>
+
+                        <div class="flex items-center justify-center gap-2 mb-2 text-yellow-800">
+                            <i class="fa-solid fa-bolt text-yellow-600"></i>
+                            <span class="text-xs font-bold uppercase tracking-widest">เกียรติบัตรเชิดชูเกียรติการเรียนรู้ออนไลน์</span>
+                            <i class="fa-solid fa-bolt text-yellow-600"></i>
+                        </div>
+
+                        <h2 class="text-xl md:text-3xl font-extrabold text-amber-900 mb-1 tracking-wide">
+                            เกียรติบัตรฉบับนี้ให้ไว้เพื่อแสดงว่า
+                        </h2>
+
+                        <div class="my-4 py-3 border-y border-amber-400/60 max-w-lg mx-auto">
+                            <h3 class="text-2xl md:text-4xl font-bold text-slate-900 underline decoration-amber-600 underline-offset-8">
+                                ${gameState.playerName || "ผู้เรียนคนเก่ง"}
+                            </h3>
+                        </div>
+
+                        <p class="text-xs md:text-sm text-slate-700 leading-relaxed max-w-xl mx-auto mb-6">
+                            ได้ปฏิบัติกิจกรรมการเรียนรู้และผ่านเกณฑ์การทดสอบ เรื่อง <b>"พลังแห่งแรง: ดินแดนฟิสิกส์ ม.2"</b> อย่างเต็มความสามารถ
+                        </p>
+
+                        <div class="flex justify-center gap-6 mb-8 text-xs font-semibold text-slate-800">
+                            <div class="bg-amber-100/80 px-4 py-2 rounded-xl border border-amber-300">
+                                📊 คะแนนข้อสอบ: <span class="text-amber-900 font-bold">${gameState.quizScore} / ${totalQ}</span> (${percentage}%)
+                            </div>
+                            <div class="bg-amber-100/80 px-4 py-2 rounded-xl border border-amber-300">
+                                ⚡ คะแนนสะสม XP: <span class="text-amber-900 font-bold">${gameState.xp} XP</span>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-around items-center pt-4 border-t border-amber-400/40 text-xs text-slate-800">
+                            <div class="text-center">
+                                <div class="font-bold text-amber-900 mb-1">ห้องเรียนครูปลานุ่น</div>
+                                <div class="text-[11px] text-slate-600">แหล่งเรียนรู้วิทยาศาสตร์ ม.2</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="font-bold text-amber-900 mb-1">(ครูสมฤดี พูนผล)</div>
+                                <div class="text-[11px] text-slate-600">ผู้จัดทำสื่อการเรียนรู้</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4 w-full max-w-md">
+                        <button onclick="window.print()" class="flex-1 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-xs font-bold text-slate-950 transition-colors flex items-center justify-center gap-2 shadow-lg">
+                            <i class="fa-solid fa-camera"></i> พิมพ์ / แคปหน้าจอเกียรติบัตร
+                        </button>
+                        <button onclick="switchScreen('menu')" class="flex-1 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-bold text-white transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-house"></i> กลับเมนูหลัก
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showToast(message, type = 'success') {
+            const existingToast = document.getElementById('custom-toast');
+            if (existingToast) existingToast.remove();
+
+            const toast = document.createElement('div');
+            toast.id = 'custom-toast';
+            toast.className = `fixed bottom-6 right-6 z-50 px-5 py-3 rounded-2xl glass-panel text-xs md:text-sm font-medium shadow-2xl border flex items-center gap-3 animate-bounce transition-all ${
+                type === 'success' ? 'border-emerald-500/50 text-emerald-200 bg-emerald-950/80' : 'border-rose-500/50 text-rose-200 bg-rose-950/80'
+            }`;
+            toast.innerHTML = `
+                <i class="fa-solid ${type === 'success' ? 'fa-circle-check text-emerald-400' : 'fa-triangle-exclamation text-rose-400'} text-base"></i>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                if (toast.parentNode) toast.remove();
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
