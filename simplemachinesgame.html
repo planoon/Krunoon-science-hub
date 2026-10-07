@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Machines: ภารกิจพิชิตเครื่องกลอย่างง่าย</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background: linear-gradient(135deg, #e0e7ff 0%, #fae8ff 50%, #fce7f3 100%);
+            color: #334155;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Glass Panel Light */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 255, 255, 1);
+            box-shadow: 0 10px 40px -10px rgba(99, 102, 241, 0.2);
+        }
+
+        /* Vibrant Buttons */
+        .btn-primary {
+            background: linear-gradient(to right, #ec4899, #f97316);
+            color: white;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+        }
+        .btn-primary:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 6px 20px rgba(236, 72, 153, 0.6); }
+        
+        .btn-secondary {
+            background: linear-gradient(to right, #3b82f6, #06b6d4);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+        .btn-secondary:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6); }
+
+        /* Flip Card Styles */
+        .flip-card {
+            background-color: transparent;
+            width: 100%;
+            height: 380px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+            border-radius: 1.5rem;
+            box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.1);
+        }
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            border: 4px solid white;
+        }
+        .flip-card-front {
+            background: linear-gradient(135deg, #ffffff, #f1f5f9);
+        }
+        .flip-card-back {
+            background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+            transform: rotateY(180deg);
+            justify-content: flex-start;
+            text-align: left;
+            overflow-y: auto;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Animations */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            70% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .prize-box { animation: bounceIn 0.8s cubic-bezier(0.36, -0.04, 0.15, 1.64) forwards; }
+
+        /* Map and Flags */
+        .map-node {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: transparent;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            box-shadow: inset 0 3px 6px rgba(0,0,0,0.1);
+        }
+        .map-node.has-flag {
+            background: #fef08a;
+            border-color: #fbbf24;
+            color: #ea580c;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.8), inset 0 2px 4px rgba(255,255,255,0.8);
+            transform: scale(1.2) translateY(-5px);
+        }
+
+        /* Range Slider Light */
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%;
+            background: #ec4899; cursor: pointer; margin-top: -10px;
+            box-shadow: 0 0 10px rgba(236, 72, 153, 0.4); border: 3px solid white;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 6px; cursor: pointer; background: #cbd5e1; border-radius: 3px;
+        }
+
+        /* Lab Canvas */
+        #lab-canvas { background: #f8fafc; border-radius: 1rem; box-shadow: inset 0 4px 10px rgba(0,0,0,0.05); }
+
+        .hidden-screen { display: none !important; }
+        
+        /* Certificate */
+        .certificate-bg {
+            background: url('https://www.transparenttextures.com/patterns/cream-paper.png'), white;
+            color: #1e293b; border: 15px solid #3b82f6; outline: 5px solid #fbbf24; outline-offset: -10px;
+        }
+
+        /* Fun Shapes BG */
+        .bg-shape { position: fixed; z-index: -1; opacity: 0.4; filter: blur(40px); }
+        .shape-1 { top: -10%; left: -10%; width: 400px; height: 400px; background: #60a5fa; border-radius: 50%; }
+        .shape-2 { bottom: -10%; right: -5%; width: 500px; height: 500px; background: #f472b6; border-radius: 50%; }
+        .shape-3 { top: 40%; left: 30%; width: 300px; height: 300px; background: #c084fc; border-radius: 50%; }
+    </style>
+</head>
+<body class="flex flex-col items-center">
+    
+    <!-- Background Decorations -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
+
+    <!-- Header -->
+    <header class="w-full max-w-6xl mx-auto p-4 flex justify-between items-center glass-panel sticky top-4 z-50 rounded-2xl mb-8">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="goToHome()">
+            <div class="bg-gradient-to-br from-blue-500 to-purple-600 w-12 h-12 rounded-xl flex items-center justify-center shadow-lg transform rotate-3 hover:rotate-12 transition">
+                <i class="fas fa-atom text-2xl text-white animate-spin" style="animation-duration: 6s;"></i>
+            </div>
+            <h1 class="text-xl md:text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+                ScienceLab: เครื่องกลอย่างง่าย
+            </h1>
+        </div>
+        <div id="progress-indicator" class="hidden md:flex gap-6 text-sm font-bold">
+            <div id="nav-learn" class="text-slate-400 cursor-pointer transition flex items-center gap-2" onclick="if(state.maxStep >= 1) switchScreen('screen-learning')"><div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center shadow-sm"><i class="fas fa-book"></i></div> เรียนรู้</div>
+            <div id="nav-lab" class="text-slate-400 cursor-pointer transition flex items-center gap-2" onclick="if(state.maxStep >= 2) { switchScreen('screen-lab'); initLab(); }"><div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center shadow-sm"><i class="fas fa-flask"></i></div> ทดลอง</div>
+            <div id="nav-quiz" class="text-slate-400 cursor-pointer transition flex items-center gap-2" onclick="if(state.maxStep >= 3) { switchScreen('screen-quiz'); }"><div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center shadow-sm"><i class="fas fa-gamepad"></i></div> ทดสอบ</div>
+            <div id="nav-cert" class="text-slate-400 cursor-pointer transition flex items-center gap-2" onclick="if(state.maxStep >= 4) switchScreen('screen-cert')"><div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center shadow-sm"><i class="fas fa-certificate"></i></div> รางวัล</div>
+        </div>
+    </header>
+
+    <main class="w-full max-w-6xl mx-auto px-4 pb-12 flex-grow flex flex-col">
+
+        <!-- SCREEN 0: Login / Dashboard -->
+        <section id="screen-login" class="flex-grow flex flex-col items-center justify-center fade-in">
+            <!-- Login Box -->
+            <div class="glass-panel p-8 md:p-12 rounded-3xl text-center max-w-md w-full animate-float relative overflow-hidden" id="login-box">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-pink-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+                <div class="absolute top-0 left-0 w-32 h-32 bg-yellow-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+                
+                <div class="relative z-10">
+                    <div class="w-24 h-24 mx-auto bg-gradient-to-tr from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-xl transform rotate-12 mb-8">
+                        <i class="fas fa-rocket text-5xl text-white transform -rotate-12"></i>
+                    </div>
+                    <h2 class="text-3xl font-extrabold text-slate-800 mb-3">พร้อมลุยหรือยัง?</h2>
+                    <p class="text-slate-500 mb-8 font-medium">เข้าสู่ภารกิจเครื่องกลอย่างง่าย (ม.2) โปรดกรอกชื่อเพื่อรับเกียรติบัตรสุดเจ๋ง</p>
+                    <input type="text" id="student-name" placeholder="ใส่ชื่อ-นามสกุลของคุณที่นี่" class="w-full px-5 py-4 rounded-xl bg-white/50 border-2 border-purple-200 focus:outline-none focus:border-pink-400 focus:bg-white text-slate-800 mb-6 text-center text-xl font-bold shadow-inner placeholder-slate-400 transition-all">
+                    <button onclick="startGame()" class="w-full btn-primary font-bold py-4 px-6 rounded-xl transition-all text-xl">
+                        เริ่มผจญภัย! <i class="fas fa-paper-plane ml-2"></i>
+                    </button>
+                    <div id="login-error" class="text-pink-500 font-bold text-sm mt-4 hidden bg-pink-50 py-2 rounded-lg border border-pink-200">✨ อ๊ะๆ อย่าลืมพิมพ์ชื่อก่อนนะ ✨</div>
+                </div>
+            </div>
+
+            <!-- Dashboard Box -->
+            <div class="glass-panel p-8 md:p-12 rounded-3xl text-center max-w-4xl w-full hidden relative" id="dashboard-box">
+                <div class="w-20 h-20 mx-auto bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-4xl mb-4 shadow-inner border-4 border-white"><i class="fas fa-user-astronaut"></i></div>
+                <h2 class="text-3xl md:text-4xl font-extrabold mb-2 text-slate-800">ยินดีต้อนรับนักประดิษฐ์, <span id="dash-name" class="text-pink-600 bg-pink-100 px-4 py-1 rounded-full"></span></h2>
+                <p class="text-slate-500 mb-10 text-lg font-medium">ลุยภารกิจทีละด่านเพื่อปลดล็อกรางวัลใหญ่ แวะกลับมาทบทวนได้ตลอดนะ!</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <button onclick="switchScreen('screen-learning')" class="bg-white hover:bg-blue-50 text-slate-700 font-bold p-6 rounded-2xl transition duration-300 flex flex-col items-center justify-center group border-2 border-blue-200 hover:border-blue-500 shadow-md hover:shadow-xl hover:-translate-y-1">
+                        <div class="w-16 h-16 bg-blue-100 text-blue-500 rounded-full flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition"><i class="fas fa-book-open"></i></div>
+                        <div class="text-xl">1. คลังความรู้สุดปัง</div>
+                        <div class="text-sm text-slate-400 mt-2">เปิดการ์ดท่องจำให้ครบ</div>
+                    </button>
+                    
+                    <button id="dash-btn-lab" onclick="if(state.maxStep >= 2) { switchScreen('screen-lab'); initLab(); }" class="bg-white/50 opacity-60 cursor-not-allowed text-slate-700 font-bold p-6 rounded-2xl transition duration-300 flex flex-col items-center justify-center group border-2 border-slate-200 relative">
+                        <div class="absolute top-4 right-4 text-slate-300" id="dash-lock-lab"><i class="fas fa-lock text-2xl"></i></div>
+                        <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center text-3xl mb-4" id="dash-icon-lab-wrap"><i class="fas fa-flask"></i></div>
+                        <div class="text-xl">2. ห้องทดลองสนุกคิด</div>
+                        <div class="text-sm text-slate-400 mt-2">ลงมือปรับค่าด้วยตัวเอง</div>
+                    </button>
+                    
+                    <button id="dash-btn-quiz" onclick="if(state.maxStep >= 3) { switchScreen('screen-quiz'); }" class="bg-white/50 opacity-60 cursor-not-allowed text-slate-700 font-bold p-6 rounded-2xl transition duration-300 flex flex-col items-center justify-center group border-2 border-slate-200 relative">
+                        <div class="absolute top-4 right-4 text-slate-300" id="dash-lock-quiz"><i class="fas fa-lock text-2xl"></i></div>
+                        <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center text-3xl mb-4" id="dash-icon-quiz-wrap"><i class="fas fa-gamepad"></i></div>
+                        <div class="text-xl">3. ท้าประลอง 15 ข้อ</div>
+                        <div class="text-sm text-slate-400 mt-2">สะสมธงปักหลุมรับรางวัล</div>
+                    </button>
+
+                    <button id="dash-btn-cert" onclick="if(state.maxStep >= 4) switchScreen('screen-cert')" class="bg-white/50 opacity-60 cursor-not-allowed text-slate-700 font-bold p-6 rounded-2xl transition duration-300 flex flex-col items-center justify-center group border-2 border-slate-200 relative">
+                        <div class="absolute top-4 right-4 text-slate-300" id="dash-lock-cert"><i class="fas fa-lock text-2xl"></i></div>
+                        <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center text-3xl mb-4" id="dash-icon-cert-wrap"><i class="fas fa-certificate"></i></div>
+                        <div class="text-xl">4. รับเกียรติบัตร</div>
+                        <div class="text-sm text-slate-400 mt-2">ฉลองความสำเร็จ!</div>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 1: Learning (Flashcards) -->
+        <section id="screen-learning" class="hidden-screen w-full flex-grow flex flex-col items-center">
+            <div class="text-center mb-8 bg-white/80 backdrop-blur-sm px-10 py-4 rounded-full border-2 border-blue-200 shadow-md">
+                <h2 class="text-3xl font-extrabold text-blue-600"><i class="fas fa-book-open mr-2 text-pink-500"></i> ฐานที่ 1: คลังความรู้สุดปัง</h2>
+                <p class="text-slate-500 font-medium mt-1">กดเปิดการ์ดเพื่อดูความหมายทีละใบ แล้วกดลูกศรเลื่อนไปข้อถัดไป (ต้องดูให้ครบนะ!)</p>
+            </div>
+            
+            <div class="flex items-center justify-center w-full max-w-4xl gap-4 md:gap-10 mb-8">
+                <button onclick="prevCard()" class="bg-white hover:bg-blue-50 text-blue-500 w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center transition transform hover:-translate-x-2 shadow-xl border-4 border-blue-100 text-2xl md:text-3xl"><i class="fas fa-chevron-left"></i></button>
+                
+                <div id="single-card-container" class="w-full max-w-lg h-[380px]">
+                    <!-- Single Card Injected via JS -->
+                </div>
+                
+                <button onclick="nextCard()" class="bg-white hover:bg-blue-50 text-blue-500 w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center transition transform hover:translate-x-2 shadow-xl border-4 border-blue-100 text-2xl md:text-3xl"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            
+            <div class="text-center text-slate-600 mb-10 font-bold bg-white px-8 py-3 rounded-full border-2 border-pink-200 shadow-md text-lg flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-pink-100 text-pink-500 flex items-center justify-center"><i class="fas fa-eye"></i></div>
+                เปิดอ่านแล้ว: <span id="learned-count" class="text-pink-600 text-2xl mx-1">0</span> / 7 ใบ
+            </div>
+
+            <div class="flex justify-center gap-6">
+                <button onclick="goToHome()" class="bg-white text-slate-600 font-bold py-4 px-8 rounded-2xl transition hover:bg-slate-50 shadow-md border-2 border-slate-200 hover:-translate-y-1 text-lg">
+                    <i class="fas fa-home mr-2"></i> เมนูหลัก
+                </button>
+                <button id="btn-to-lab" onclick="goToLab()" class="bg-slate-200 cursor-not-allowed text-slate-500 font-bold py-4 px-10 rounded-2xl transition duration-300 text-lg border-2 border-slate-300" disabled>
+                    <i class="fas fa-lock mr-2"></i> ไปห้องทดลอง
+                </button>
+            </div>
+        </section>
+
+        <!-- SCREEN 2: Virtual Lab -->
+        <section id="screen-lab" class="hidden-screen w-full flex-grow flex flex-col items-center">
+            <div class="text-center mb-6 bg-white/80 backdrop-blur-sm px-10 py-4 rounded-full border-2 border-emerald-200 shadow-md">
+                <h2 class="text-3xl font-extrabold text-emerald-600"><i class="fas fa-flask mr-2 text-emerald-400"></i> ฐานที่ 2: ห้องทดลองสนุกคิด</h2>
+                <p class="text-slate-500 font-medium mt-1">เลือกเครื่องกลจากกล่องด้านล่าง ลองปรับเลื่อนแถบพลังงานให้ครบทั้ง 6 ด่าน</p>
+            </div>
+
+            <div class="w-full max-w-5xl flex flex-col gap-6 glass-panel p-8 rounded-3xl border border-white shadow-2xl relative">
+                
+                <div class="absolute -top-4 right-4 bg-emerald-100 text-emerald-600 px-6 py-2 rounded-full font-bold border-2 border-emerald-300 shadow-lg flex items-center gap-2">
+                    <i class="fas fa-check-circle"></i> ทดลองแล้ว <span id="lab-visited-count" class="text-xl">0</span>/6 ชนิด
+                </div>
+
+                <!-- Lab Selector Dropdown -->
+                <div class="w-full max-w-md mx-auto bg-white p-5 rounded-2xl border-2 border-emerald-200 shadow-sm mt-4">
+                    <label class="block text-slate-600 font-bold mb-2 flex items-center gap-2"><div class="w-6 h-6 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xs"><i class="fas fa-hand-pointer"></i></div> เลือกเครื่องมือเพื่อทดลอง:</label>
+                    <select id="lab-selector" onchange="switchLab(parseInt(this.value))" class="block w-full bg-slate-50 border-2 border-emerald-300 text-slate-700 text-xl rounded-xl focus:ring-emerald-500 focus:border-emerald-500 p-4 shadow-inner cursor-pointer font-extrabold outline-none hover:bg-white transition">
+                        <option value="0">1. คาน (Lever)</option>
+                        <option value="1">2. รอก (Pulley)</option>
+                        <option value="2">3. พื้นเอียง (Inclined Plane)</option>
+                        <option value="3">4. ล้อและเพลา (Wheel & Axle)</option>
+                        <option value="4">5. สกรู (Screw)</option>
+                        <option value="5">6. ลิ่ม (Wedge)</option>
+                    </select>
+                </div>
+
+                <!-- Lab Main Area -->
+                <div class="w-full flex flex-col mt-4">
+                    <h3 id="lab-title" class="text-3xl font-extrabold text-slate-700 flex items-center justify-center mb-6 drop-shadow-sm"><i class="fas fa-balance-scale mr-3 text-emerald-500"></i> คาน (Lever)</h3>
+                    
+                    <!-- Canvas Container -->
+                    <div class="relative w-full aspect-[21/9] md:aspect-video bg-white rounded-2xl overflow-hidden mb-8 flex justify-center items-center border-4 border-slate-100 shadow-[inset_0_4px_20px_rgba(0,0,0,0.05)]">
+                        <!-- Blueprint pattern background -->
+                        <div class="absolute inset-0 pointer-events-none opacity-20" style="background-image: radial-gradient(#94a3b8 1px, transparent 1px); background-size: 20px 20px;"></div>
+                        
+                        <canvas id="lab-canvas" width="800" height="400" class="max-w-full h-auto z-10"></canvas>
+                        
+                        <!-- Overlay for variables -->
+                        <div id="lab-info" class="absolute top-4 left-4 bg-white/95 p-5 rounded-xl text-slate-700 border-2 border-emerald-200 backdrop-blur-md pointer-events-none shadow-xl z-20 font-medium">
+                            กำลังโหลด...
+                        </div>
+                    </div>
+
+                    <!-- Controls -->
+                    <div id="lab-controls" class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-slate-50/80 p-8 rounded-3xl border-2 border-slate-200 shadow-sm">
+                        <!-- Sliders injected via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center mt-10 gap-6">
+                <button onclick="goToHome()" class="bg-white text-slate-600 font-bold py-4 px-8 rounded-2xl transition hover:bg-slate-50 shadow-md border-2 border-slate-200 hover:-translate-y-1 text-lg">
+                    <i class="fas fa-home mr-2"></i> กลับเมนูหลัก
+                </button>
+                <button id="btn-to-quiz" onclick="goToQuiz()" class="bg-slate-200 cursor-not-allowed text-slate-500 font-bold py-4 px-10 rounded-2xl transition duration-300 text-lg border-2 border-slate-300" disabled>
+                    <i class="fas fa-lock mr-2"></i> ไปทำแบบทดสอบ
+                </button>
+            </div>
+        </section>
+
+        <!-- SCREEN 3: Quiz -->
+        <section id="screen-quiz" class="hidden-screen w-full flex-grow flex flex-col items-center">
+            
+            <!-- Area 1: Active Quiz -->
+            <div id="quiz-active-area" class="w-full flex flex-col items-center">
+                <div class="text-center mb-8 bg-white/80 backdrop-blur-sm px-10 py-4 rounded-full border-2 border-orange-200 shadow-md w-full max-w-3xl">
+                    <h2 class="text-3xl font-extrabold text-orange-600"><i class="fas fa-star mr-2 text-yellow-500"></i> ฐานที่ 3: ท้าประลอง 15 ข้อ</h2>
+                    <p class="text-slate-500 font-medium mt-1">ตอบให้ถูกเพื่อสะสมธงแห่งชัยชนะ (ธงจะถูกปักพร้อมกันเมื่อตอบครบ)</p>
+                </div>
+
+                <div class="w-full max-w-3xl glass-panel p-8 md:p-12 rounded-3xl relative flex flex-col border border-white shadow-2xl">
+                    
+                    <div class="flex justify-between items-center mb-8 pb-6 border-b-2 border-slate-100">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-black text-xl shadow-inner">Q<span id="q-num">1</span></div>
+                            <span class="text-slate-500 font-bold text-lg">จาก 15 ข้อ</span>
+                        </div>
+                        <div class="bg-yellow-100 text-yellow-700 px-5 py-2 rounded-full border-2 border-yellow-300 font-bold text-lg flex items-center gap-2 shadow-sm">
+                            <i class="fas fa-flag text-orange-500"></i> ธงสะสม: <span id="q-score" class="text-2xl ml-1">0</span>
+                        </div>
+                    </div>
+                    
+                    <h3 id="question-text" class="text-2xl md:text-3xl font-extrabold mb-10 text-slate-800 leading-snug min-h-[100px] text-center px-4">คำถาม...?</h3>
+                    
+                    <div id="choices-container" class="grid grid-cols-1 gap-5">
+                        <!-- Choices injected via JS -->
+                    </div>
+                </div>
+                
+                <div class="mt-10">
+                    <button onclick="goToHome()" class="bg-white text-slate-600 font-bold py-4 px-8 rounded-2xl transition hover:bg-slate-50 shadow-md border-2 border-slate-200 hover:-translate-y-1 text-lg">
+                        <i class="fas fa-pause mr-2"></i> พักก่อน กลับเมนูหลัก
+                    </button>
+                </div>
+            </div>
+
+            <!-- Area 2: Map & Prize Reveal (Hidden until quiz end) -->
+            <div id="quiz-result-area" class="w-full max-w-5xl hidden flex-col items-center animate-fade-in">
+                <h2 class="text-4xl font-extrabold text-slate-800 mb-4 text-center">🎉 สรุปผลการปักธง 🎉</h2>
+                <p class="text-xl text-slate-600 mb-10 font-medium">มาดูกันว่าคุณปักธงได้ไกลแค่ไหน!</p>
+                
+                <div class="glass-panel w-full p-8 md:p-12 rounded-3xl relative overflow-hidden border-4 border-white shadow-2xl flex flex-col items-center">
+                    <!-- Path Background -->
+                    <div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: repeating-linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000), repeating-linear-gradient(45deg, #000 25%, bg-white 25%, bg-white 75%, #000 75%, #000); background-position: 0 0, 20px 20px; background-size: 40px 40px;"></div>
+                    
+                    <div id="flag-map" class="flex flex-wrap gap-4 md:gap-6 justify-center items-center w-full z-10 mb-12 py-8">
+                        <!-- Map Nodes injected via JS -->
+                    </div>
+
+                    <div id="prize-reveal-box" class="w-full max-w-lg bg-white p-8 rounded-3xl border-4 border-yellow-300 shadow-[0_20px_50px_rgba(251,191,36,0.3)] text-center hidden flex-col items-center transform scale-90 transition-transform duration-500 z-20">
+                        <h4 class="text-xl text-slate-500 font-bold mb-2">ผลลัพธ์ของคุณคือ...</h4>
+                        <div id="prize-icon" class="text-8xl my-6 text-yellow-500 drop-shadow-xl transform hover:scale-110 transition cursor-pointer"></div>
+                        <div id="prize-name" class="text-3xl text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-orange-500 font-black mb-8 px-4 leading-tight whitespace-pre-line"></div>
+                        
+                        <button id="prize-action-btn" onclick="continueToCert()" class="btn-primary w-full py-5 px-8 rounded-2xl shadow-xl text-2xl font-bold flex justify-center items-center gap-3">
+                            รับเกียรติบัตร! <i class="fas fa-award text-3xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+        </section>
+
+        <!-- SCREEN 4: Certificate -->
+        <section id="screen-cert" class="hidden-screen w-full flex-grow flex flex-col items-center justify-center">
+            
+            <div id="certificate-box" class="certificate-bg p-10 md:p-16 rounded-sm shadow-2xl max-w-4xl w-full text-center relative overflow-hidden transform hover:scale-[1.01] transition duration-500">
+                
+                <!-- Background decors for Simple Machines -->
+                <div class="absolute -top-10 -left-10 text-blue-500/10 text-[12rem] transform -rotate-12 pointer-events-none z-0"><i class="fas fa-cogs"></i></div>
+                <div class="absolute -bottom-10 -right-10 text-pink-500/10 text-[12rem] transform rotate-12 pointer-events-none z-0"><i class="fas fa-balance-scale-right"></i></div>
+                <div class="absolute top-1/4 -right-16 text-emerald-500/10 text-[10rem] pointer-events-none z-0"><i class="fas fa-wrench"></i></div>
+                <div class="absolute bottom-1/4 -left-16 text-orange-500/10 text-[10rem] pointer-events-none z-0"><i class="fas fa-dharmachakra"></i></div>
+                
+                <!-- Inner decorative border -->
+                <div class="absolute inset-0 border-[6px] border-double border-blue-900/10 m-3 rounded-lg pointer-events-none z-0"></div>
+
+                <!-- Ribbon decoration -->
+                <div class="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-yellow-400 to-orange-500 transform rotate-45 translate-x-20 -translate-y-20 shadow-2xl z-10"></div>
+                <div class="absolute top-6 right-6 text-white text-3xl transform rotate-45 z-20"><i class="fas fa-star"></i></div>
+                
+                <div class="relative z-10">
+                    <h1 class="text-5xl md:text-6xl font-black text-blue-900 mb-4 tracking-wider mt-4 drop-shadow-sm">เกียรติบัตร</h1>
+                    <p class="text-2xl text-blue-600 font-bold mb-10 tracking-widest">CERTIFICATE OF EXCELLENCE</p>
+                    
+                    <p class="text-slate-600 text-xl mb-4 font-medium">ขอมอบเกียรติบัตรฉบับนี้เพื่อแสดงว่า</p>
+                    
+                    <h2 id="cert-name" class="text-4xl md:text-5xl font-extrabold text-pink-600 mb-6 border-b-4 border-pink-200 inline-block px-12 pb-4">
+                        ชื่อผู้เรียน
+                    </h2>
+                    
+                    <p class="text-slate-700 text-xl mb-12 leading-loose font-medium max-w-2xl mx-auto">
+                        ได้ผ่านการเรียนรู้ ทดลอง และทดสอบในภารกิจ<br>
+                        <span class="font-black text-blue-800 text-3xl bg-blue-50/90 backdrop-blur-sm px-6 py-3 rounded-2xl inline-block mt-4 border border-blue-200 shadow-md"><i class="fas fa-tools text-emerald-500 mr-2"></i>เครื่องกลอย่างง่าย (Simple Machines)</span><br>
+                        ด้วยความมุ่งมั่นและมีทักษะกระบวนการทางวิทยาศาสตร์ยอดเยี่ยม
+                    </p>
+                    
+                    <div class="flex justify-between items-end mt-16 px-4 md:px-12">
+                        <div class="text-center">
+                            <div class="font-extrabold text-2xl text-blue-900 mb-2" style="font-family: 'Prompt', sans-serif;">ครูสมฤดี พูนผล</div>
+                            <div class="border-b-2 border-slate-500 w-56 mb-3 mx-auto"></div>
+                            <p class="text-lg text-slate-500 font-bold">วันที่ <span id="cert-date"></span></p>
+                        </div>
+                        <div class="w-32 h-32 rounded-full border-8 border-yellow-400 flex items-center justify-center text-yellow-600 bg-white shadow-xl transform -rotate-12 relative">
+                            <div class="absolute inset-0 border-2 border-dashed border-yellow-600 rounded-full m-1"></div>
+                            <div class="text-center leading-tight bg-white rounded-full p-2">
+                                <i class="fas fa-medal text-4xl mb-1"></i><br>
+                                <span class="text-sm font-black tracking-widest" id="cert-percent-display">100%</span>
+                                <div class="text-[0.6rem] font-bold text-slate-500 mt-1 leading-none">คะแนน <span id="cert-score-display">15/15</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12 flex gap-6">
+                <button onclick="saveCertAsImage()" class="btn-secondary font-bold py-4 px-10 rounded-2xl shadow-xl text-xl flex items-center gap-3 transition">
+                    <i class="fas fa-download"></i> บันทึกภาพเกียรติบัตร
+                </button>
+                <button onclick="location.reload()" class="bg-white text-slate-600 font-bold py-4 px-10 rounded-2xl shadow-md hover:bg-slate-50 border-2 border-slate-200 text-xl flex items-center gap-3">
+                    <i class="fas fa-redo"></i> เล่นอีกครั้ง
+                </button>
+            </div>
+        </section>
+
+        <!-- Quiz Result Popup (Per Question) - Re-styled for light theme -->
+        <div id="quiz-alert" class="fixed inset-0 bg-slate-900/60 hidden z-[110] flex items-center justify-center backdrop-blur-sm transition-opacity">
+            <div class="bg-white p-10 rounded-[2rem] border-4 max-w-md w-full mx-4 text-center transform scale-95 transition-transform duration-300 shadow-2xl relative overflow-hidden" id="quiz-alert-box">
+                <!-- BG decors inside popup -->
+                <div id="quiz-alert-bg-circle" class="absolute -top-10 -right-10 w-32 h-32 rounded-full opacity-20"></div>
+                
+                <div id="quiz-alert-icon" class="text-7xl mb-6 drop-shadow-lg relative z-10"></div>
+                <h3 id="quiz-alert-title" class="text-3xl font-black mb-3 relative z-10">ผลลัพธ์</h3>
+                <p id="quiz-alert-message" class="text-slate-600 mb-10 text-xl font-bold relative z-10">ข้อความ</p>
+                <button onclick="nextQuizQuestion()" class="btn-primary w-full py-4 px-8 rounded-2xl text-2xl relative z-10 font-bold">
+                    ลุยต่อ! <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // --- State Management ---
+        const state = {
+            studentName: "",
+            cardsFlipped: new Set(),
+            currentCardIndex: 0,
+            labsVisited: new Set([0]),
+            currentLabIndex: 0,
+            quizStep: 0,
+            flags: 0,
+            labInteracted: new Set(),
+            maxStep: 1,
+            quizActiveQuestions: [] 
+        };
+
+        // --- Data ---
+        const flashcards = [
+            { id: 0, title: "คาน (Lever)", icon: "fa-balance-scale", img: "fas fa-cut", desc: "แท่งแข็งที่หมุนรอบจุดหมุน (F) ช่วยผ่อนแรงหรือเพิ่มระยะทาง มี 3 อันดับ ขึ้นอยู่กับตำแหน่งของ F, E (แรงพยายาม) และ W (แรงต้าน)", formula: "E × L1 = W × L2", ex: "กรรไกร, คีม, ไม้กระดก, ที่คีบน้ำแข็ง" },
+            { id: 1, title: "รอก (Pulley)", icon: "fa-circle-notch", img: "fas fa-truck-loading", desc: "รอกตายตัว(ไม่ผ่อนแรง) รอกเคลื่อนที่(ผ่อนแรงครึ่งนึง) และรอกพวงนำรอกมาผูกรวมกัน โดย 'รอกพวงระบบที่ 1' จะร้อยเชือกแยกอิสระ ยิ่งมีรอกเคลื่อนที่มาก ยิ่งผ่อนแรงได้มหาศาล!", formula: "ตายตัว: E=W | เคลื่อนที่: E=W/2 | ระบบ 1: E=W/(2^n)", ex: "เครนก่อสร้าง, เสาธง, ลิฟต์" },
+            { id: 2, title: "พื้นเอียง (Inclined Plane)", icon: "fa-play", img: "fas fa-wheelchair", desc: "ทางลาดที่ช่วยลดแรงดึงหรือผลัก ยิ่งทางลาดมีความยาว(L)มากเมื่อเทียบกับความสูง(H) จะยิ่งผ่อนแรงได้มาก เดินอ้อมเขาดีกว่าปีนหน้าผานะ!", formula: "E × L = W × H", ex: "ทางลาดสำหรับรถเข็น, บันได" },
+            { id: 3, title: "ล้อและเพลา (Wheel & Axle)", icon: "fa-dharmachakra", img: "fas fa-car-side", desc: "ทรงกระบอกใหญ่(ล้อ)ติดกับทรงกระบอกเล็ก(เพลา) หมุนไปพร้อมกัน ออกแรงที่ล้อวงกว้าง จะเอาชนะน้ำหนักที่เพลาวงแคบได้สบายๆ", formula: "E × R(ล้อ) = W × r(เพลา)", ex: "พวงมาลัยรถ, ลูกบิดประตู, ไขควง" },
+            { id: 4, title: "สกรู (Screw)", icon: "fa-tools", img: "fas fa-wrench", desc: "พื้นเอียงที่ถูกนำมาพันรอบทรงกระบอก เปลี่ยนแรงหมุนเกลียวให้เป็นแรงดันขึ้น/ลง ยิ่งเกลียวถี่ชิดกันยิ่งผ่อนแรงหมุน", formula: "E × 2πR = W × P(ระยะเกลียว)", ex: "น็อต, แม่แรงยกรถ, สว่านเจาะ" },
+            { id: 5, title: "ลิ่ม (Wedge)", icon: "fa-caret-down", img: "fas fa-hammer", desc: "แผ่นโลหะหรือไม้ที่มีหน้าตัดเป็นสามเหลี่ยม (พื้นเอียง 2 อันประกบกัน) ใช้ตอกเพื่อแยกวัตถุให้ขาดจากกัน ยิ่งยาวและบางยิ่งฟันขาดง่าย", formula: "E × H(ความยาว) = W × L(ความหนา)", ex: "ขวาน, มีด, ตะปู, สิ่ว" },
+            { id: 6, title: "การได้เปรียบเชิงกล (MA)", icon: "fa-chart-line", img: "fas fa-balance-scale-right", desc: "การได้เปรียบเชิงกล (Mechanical Advantage) คือ อัตราส่วนที่บ่งบอกว่าเครื่องกลช่วย 'ผ่อนแรง' ให้เราได้กี่เท่า ยิ่งค่า MA มากกว่า 1 ยิ่งผ่อนแรงได้มาก! (ถ้า MA = 1 จะไม่ผ่อนแรงเลย)", formula: "MA = W (แรงต้าน) / E (แรงพยายาม)", ex: "ถ้าคำนวณแล้ว MA = 2 แปลว่าเราจะออกแรงแค่ 'ครึ่งเดียว' ของน้ำหนักวัตถุจริงๆ" }
+        ];
+
+        const questions = [
+            { q: "เครื่องกลประเภทใดที่ช่วย 'อำนวยความสะดวก' เปลี่ยนทิศทางแรง แต่ 'ไม่ผ่อนแรง' เลย?", choices: ["รอกเดี่ยวตายตัว", "รอกเดี่ยวเคลื่อนที่", "พื้นเอียง", "คานอันดับ 2"], ans: 0 },
+            { q: "คีมตัดลวด และ กรรไกร จัดเป็นเครื่องกลประเภทใด?", choices: ["ลิ่ม", "ล้อและเพลา", "คานอันดับ 1", "คานอันดับ 3"], ans: 2 },
+            { q: "ต้องการยกกล่องหนัก 100 นิวตัน ด้วย 'รอกเดี่ยวเคลื่อนที่ 1 ตัว' ต้องออกแรงดึงประมาณเท่าใด?", choices: ["10 นิวตัน", "50 นิวตัน", "100 นิวตัน", "200 นิวตัน"], ans: 1 },
+            { q: "ทางลาดชันที่รถเข็นขึ้นห้างสรรพสินค้า เป็นการประยุกต์ใช้เครื่องกลชนิดใด?", choices: ["ลิ่ม", "คาน", "สกรู", "พื้นเอียง"], ans: 3 },
+            { q: "ลูกบิดประตู หรือ พวงมาลัยรถยนต์ เป็นเครื่องกลประเภทใด?", choices: ["ล้อและเพลา", "รอก", "สกรู", "ลิ่ม"], ans: 0 },
+            { q: "รถเข็นทราย (มีล้ออยู่ปลาย, ของหนักตรงกลาง, คนยกที่ด้าม) คือคานอันดับใด?", choices: ["อันดับ 1", "อันดับ 2", "อันดับ 3", "อันดับ 4"], ans: 1 },
+            { q: "อุปกรณ์ใดต่อไปนี้ ใช้หลักการของ 'ลิ่ม' เพื่อผ่าแยกวัตถุ?", choices: ["ไขควง", "ขวาน", "คีมตัดลวด", "ไม้กวาด"], ans: 1 },
+            { q: "หลักการ 'ยิ่งเกลียวชิดกันมาก ยิ่งผ่อนแรงมาก' เป็นของเครื่องกลชนิดใด?", choices: ["คาน", "พื้นเอียง", "สกรู", "ล้อและเพลา"], ans: 2 },
+            { q: "ไม้กวาด ที่คีบน้ำแข็ง และตะเกียบ (ออกแรงตรงกลาง) จัดเป็นคานอันดับใด?", choices: ["คานอันดับ 1", "คานอันดับ 2", "คานอันดับ 3", "ไม่ใช่คาน"], ans: 2 },
+            { q: "หลักการของเครื่องกลอย่างง่ายในอุดมคติ ข้อใดกล่าวถูกต้องที่สุด?", choices: ["ได้งาน(พลังงาน)มากกว่าที่ทำเสมอ", "งานที่ได้เท่ากับงานที่ทำ", "ช่วยลดงานลงครึ่งหนึ่ง", "สูญเสียพลังงาน 100%"], ans: 1 },
+            { q: "แม่แรงยกรถ ที่ใช้คันโยกหมุนเกลียวเพื่อยกของหนัก ใช้หลักการเครื่องกลชนิดใดเป็นหลัก?", choices: ["คาน", "รอก", "สกรู", "ลิ่ม"], ans: 2 },
+            { q: "จากสูตร E × L = W × H เป็นสมการของเครื่องกลชนิดใด?", choices: ["คาน", "พื้นเอียง", "สกรู", "ล้อและเพลา"], ans: 1 },
+            { q: "ข้อใด ไม่ใช่ เครื่องกลอย่างง่าย (Simple Machine)?", choices: ["รอก", "สกรู", "ลิ่ม", "มอเตอร์ไฟฟ้า"], ans: 3 },
+            { q: "ถ้าใช้ 'รอกพวง' ที่มีรอกเคลื่อนที่ 2 ตัว (ระบบเส้นเชือก 4 เส้น) จะช่วยผ่อนแรงกี่เท่า?", choices: ["2 เท่า", "3 เท่า", "4 เท่า", "8 เท่า"], ans: 2 },
+            { q: "ถ้าต้องการให้ 'ลิ่ม' (เช่น มีด) ผ่อนแรงหรือหั่นของได้ง่ายที่สุด ควรมีลักษณะอย่างไร?", choices: ["สั้นและหนา", "ยาวและบาง", "ยาวและหนา", "สั้นและบาง"], ans: 1 }
+        ];
+
+        // --- Navigation Logic ---
+        function updateNavState() {
+            const steps = ['learn', 'lab', 'quiz', 'cert'];
+            steps.forEach((step, idx) => {
+                const el = document.getElementById(`nav-${step}`);
+                if(!el) return;
+                const stepNum = idx + 1;
+                const iconWrap = el.querySelector('div');
+                
+                if (stepNum < state.maxStep) {
+                    el.className = 'text-emerald-500 cursor-pointer transition flex items-center gap-2 font-bold';
+                    iconWrap.className = 'w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center shadow-sm text-emerald-600';
+                    iconWrap.innerHTML = '<i class="fas fa-check"></i>';
+                } else if (stepNum === state.maxStep) {
+                    el.className = 'text-pink-600 font-extrabold cursor-pointer transition flex items-center gap-2 transform scale-110 ml-2';
+                    iconWrap.className = 'w-8 h-8 rounded-full bg-pink-500 text-white flex items-center justify-center shadow-md animate-pulse';
+                } else {
+                    el.className = 'text-slate-400 cursor-not-allowed flex items-center gap-2 font-medium';
+                    iconWrap.className = 'w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center shadow-sm text-slate-300';
+                }
+            });
+
+            if(state.studentName) {
+                document.getElementById('dash-name').innerText = state.studentName;
+                
+                const unlockBtn = (id, colorCls, bgIconCls, textIconCls, lockId, wrapId) => {
+                    const btn = document.getElementById(id);
+                    btn.classList.remove('opacity-60', 'cursor-not-allowed');
+                    btn.classList.add('hover:-translate-y-1', 'hover:shadow-xl', 'border-blue-200', 'hover:border-blue-500', 'bg-white');
+                    document.getElementById(lockId).classList.add('hidden');
+                    const wrap = document.getElementById(wrapId);
+                    wrap.className = `w-16 h-16 rounded-full flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition ${bgIconCls} ${textIconCls}`;
+                };
+
+                if(state.maxStep >= 2) unlockBtn('dash-btn-lab', 'text-emerald-500', 'bg-emerald-100', 'text-emerald-500', 'dash-lock-lab', 'dash-icon-lab-wrap');
+                if(state.maxStep >= 3) unlockBtn('dash-btn-quiz', 'text-orange-500', 'bg-orange-100', 'text-orange-500', 'dash-lock-quiz', 'dash-icon-quiz-wrap');
+                if(state.maxStep >= 4) unlockBtn('dash-btn-cert', 'text-yellow-500', 'bg-yellow-100', 'text-yellow-600', 'dash-lock-cert', 'dash-icon-cert-wrap');
+            }
+        }
+
+        function switchScreen(screenId) {
+            ['screen-login', 'screen-learning', 'screen-lab', 'screen-quiz', 'screen-cert'].forEach(id => {
+                document.getElementById(id).classList.add('hidden-screen');
+            });
+            document.getElementById(screenId).classList.remove('hidden-screen');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            updateNavState();
+        }
+
+        function startGame() {
+            const nameInput = document.getElementById('student-name').value.trim();
+            if(!nameInput) {
+                const err = document.getElementById('login-error');
+                err.classList.remove('hidden');
+                err.classList.add('animate-bounce');
+                setTimeout(() => err.classList.remove('animate-bounce'), 1000);
+                return;
+            }
+            state.studentName = nameInput;
+            state.maxStep = 1;
+            
+            document.getElementById('login-box').classList.add('hidden');
+            document.getElementById('dashboard-box').classList.remove('hidden');
+            
+            initLearning();
+            updateNavState();
+            switchScreen('screen-learning'); // Auto start
+        }
+
+        function goToHome() {
+            if(!state.studentName) return;
+            updateNavState();
+            switchScreen('screen-login'); 
+        }
+
+        // --- Step 1: Learning ---
+        function initLearning() {
+            state.currentCardIndex = 0;
+            renderSingleCard();
+        }
+
+        function renderSingleCard() {
+            const container = document.getElementById('single-card-container');
+            const card = flashcards[state.currentCardIndex];
+            
+            // เริ่มต้นการแสดงผลในหน้าด้านหน้าเสมอ
+            container.innerHTML = `
+                <div class="flip-card group" onclick="flipSingleCard(${card.id}, this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition duration-300 shadow-inner">
+                                <i class="fas ${card.icon} text-6xl text-blue-500"></i>
+                            </div>
+                            <h3 class="text-4xl font-extrabold text-slate-800 mb-2">${card.title}</h3>
+                            <div class="mt-8 px-6 py-2 bg-pink-100 rounded-full text-pink-600 font-bold text-lg animate-pulse border border-pink-200">
+                                <i class="fas fa-hand-pointer mr-2"></i> จิ้มเพื่อพลิกดูความหมาย!
+                            </div>
+                        </div>
+                        <div class="flip-card-back border-4 border-emerald-200">
+                            <h3 class="text-3xl font-extrabold text-emerald-700 border-b-2 border-emerald-200 pb-3 mb-4 w-full text-center"><i class="fas ${card.icon} mr-3 text-emerald-500"></i>${card.title}</h3>
+                            <div class="text-lg space-y-4 w-full pr-2 font-medium text-slate-700">
+                                <p class="bg-white p-3 rounded-xl shadow-sm border border-slate-100"><strong><i class="fas fa-info-circle text-blue-500"></i> คืออะไร:</strong> ${card.desc}</p>
+                                <p class="bg-blue-50 p-3 rounded-xl border border-blue-200 text-blue-800"><strong><i class="fas fa-subscript text-pink-500"></i> สูตร:</strong> <span class="font-bold whitespace-nowrap">${card.formula}</span></p>
+                                <p class="bg-yellow-50 p-3 rounded-xl border border-yellow-200 text-yellow-800"><strong><i class="fas fa-lightbulb text-yellow-500"></i> ตัวอย่าง:</strong> ${card.ex}</p>
+                            </div>
+                            <i class="${card.img} text-6xl absolute bottom-6 right-6 opacity-10 text-emerald-900"></i>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('learned-count').innerText = state.cardsFlipped.size;
+            checkLearningComplete();
+        }
+
+        function flipSingleCard(id, element) {
+            element.classList.toggle('flipped');
+            if(!state.cardsFlipped.has(id)) {
+                state.cardsFlipped.add(id);
+                document.getElementById('learned-count').innerText = state.cardsFlipped.size;
+                checkLearningComplete();
+            }
+        }
+
+        function nextCard() {
+            state.currentCardIndex = (state.currentCardIndex + 1) % flashcards.length;
+            renderSingleCard();
+        }
+
+        function prevCard() {
+            state.currentCardIndex = (state.currentCardIndex - 1 + flashcards.length) % flashcards.length;
+            renderSingleCard();
+        }
+
+        function checkLearningComplete() {
+            if(state.cardsFlipped.size === flashcards.length) {
+                if(state.maxStep < 2) state.maxStep = 2; 
+                const btn = document.getElementById('btn-to-lab');
+                btn.disabled = false;
+                btn.className = "btn-secondary text-white font-bold py-4 px-10 rounded-2xl text-xl animate-pulse";
+                btn.innerHTML = 'พร้อมแล้ว! ลุยห้องทดลอง <i class="fas fa-arrow-right ml-2"></i>';
+                updateNavState();
+            }
+        }
+
+        function goToLab() {
+            if(state.maxStep >= 2) {
+                switchScreen('screen-lab');
+                initLab();
+            }
+        }
+
+        // --- Step 2: Virtual Lab ---
+        const canvas = document.getElementById('lab-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let labVars = {
+            lever: { effort: 50, load: 100, class: 1 }, 
+            pulley: { load: 100, type: 1, pull: 0 }, 
+            inclined: { height: 30, length: 100, weight: 50 },
+            wheel: { rWheel: 80, rAxle: 30, load: 100 },
+            screw: { pitch: 5, radius: 20 },
+            wedge: { thickness: 20, length: 80 }
+        };
+
+        function resizeCanvas() {
+            if(document.getElementById('screen-lab').classList.contains('hidden-screen')) return;
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+            drawCurrentLab();
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        function initLab() {
+            setTimeout(() => {
+                resizeCanvas();
+                switchLab(document.getElementById('lab-selector').value || 0);
+            }, 50);
+        }
+
+        function switchLab(index) {
+            index = parseInt(index);
+            state.currentLabIndex = index;
+            state.labsVisited.add(index);
+            document.getElementById('lab-visited-count').innerText = state.labsVisited.size;
+            
+            document.getElementById('lab-selector').value = index;
+
+            const fCard = flashcards[index];
+            document.getElementById('lab-title').innerHTML = `<i class="fas ${fCard.icon} mr-3 text-emerald-500"></i> ${fCard.title}`;
+            
+            buildLabControls(index);
+            drawCurrentLab();
+            checkLabCompletion();
+        }
+
+        function markInteraction() {
+            state.labInteracted.add(state.currentLabIndex);
+            checkLabCompletion();
+        }
+
+        function checkLabCompletion() {
+            if(state.labsVisited.size === 6 && state.labInteracted.size === 6) {
+                if(state.maxStep < 3) state.maxStep = 3; 
+                const btn = document.getElementById('btn-to-quiz');
+                btn.disabled = false;
+                btn.className = "btn-primary text-white font-bold py-4 px-10 rounded-2xl text-xl animate-pulse";
+                btn.innerHTML = 'พร้อมลุยแบบทดสอบ! <i class="fas fa-star ml-2 text-yellow-300"></i>';
+                updateNavState();
+            }
+        }
+
+        function buildLabControls(index) {
+            const container = document.getElementById('lab-controls');
+            let html = '';
+            
+            // Reusing the control structure but updating text classes for light theme
+            const labelCls = "block text-base text-slate-600 mb-2 font-bold";
+            const valCls = "text-pink-600 font-black text-lg";
+
+            if(index === 0) { // Lever
+                html = `
+                    <div class="col-span-1 md:col-span-2 mb-2 border-b-2 border-slate-200 pb-4">
+                        <label class="block text-lg font-bold text-emerald-600 mb-3">เลือกอันดับของคาน</label>
+                        <div class="flex flex-wrap gap-3">
+                            <label class="flex-1 flex items-center justify-center gap-2 cursor-pointer bg-white p-3 rounded-xl border-2 border-slate-200 hover:border-emerald-400 font-medium">
+                                <input type="radio" name="leverClass" value="1" ${labVars.lever.class==1?'checked':''} onchange="labVars.lever.class=1; markInteraction(); drawCurrentLab()" class="w-5 h-5 accent-emerald-500"> 1 (จุดหมุนกลาง)
+                            </label>
+                            <label class="flex-1 flex items-center justify-center gap-2 cursor-pointer bg-white p-3 rounded-xl border-2 border-slate-200 hover:border-emerald-400 font-medium">
+                                <input type="radio" name="leverClass" value="2" ${labVars.lever.class==2?'checked':''} onchange="labVars.lever.class=2; markInteraction(); drawCurrentLab()" class="w-5 h-5 accent-emerald-500"> 2 (น้ำหนักกลาง)
+                            </label>
+                            <label class="flex-1 flex items-center justify-center gap-2 cursor-pointer bg-white p-3 rounded-xl border-2 border-slate-200 hover:border-emerald-400 font-medium">
+                                <input type="radio" name="leverClass" value="3" ${labVars.lever.class==3?'checked':''} onchange="labVars.lever.class=3; markInteraction(); drawCurrentLab()" class="w-5 h-5 accent-emerald-500"> 3 (แรงพยายามกลาง)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+                        <label class="${labelCls}">แรงพยายาม (E): <span id="val-E" class="${valCls}">${labVars.lever.effort}</span> N</label>
+                        <input type="range" min="10" max="200" value="${labVars.lever.effort}" oninput="labVars.lever.effort=this.value; document.getElementById('val-E').innerText=this.value; markInteraction(); drawCurrentLab()">
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+                        <label class="${labelCls}">น้ำหนักวัตถุ (W): <span id="val-W" class="${valCls}">${labVars.lever.load}</span> N</label>
+                        <input type="range" min="10" max="200" value="${labVars.lever.load}" oninput="labVars.lever.load=this.value; document.getElementById('val-W').innerText=this.value; markInteraction(); drawCurrentLab()">
+                    </div>
+                `;
+            } else if(index === 1) { // Pulley
+                html = `
+                    <div class="col-span-1 md:col-span-2 mb-2 border-b-2 border-slate-200 pb-4">
+                        <label class="block text-lg font-bold text-emerald-600 mb-3">ประเภทของรอก</label>
+                        <div class="flex flex-wrap gap-3">
+                            <label class="flex-1 flex items-center justify-center gap-2 cursor-pointer bg-white p-3 rounded-xl border-2 border-slate-200 hover:border-emerald-400 font-medium transition shadow-sm">
+                                <input type="radio" name="pulleyType" value="1" ${labVars.pulley.type==1?'checked':''} onchange="labVars.pulley.type=1; labVars.pulley.pull=0; document.getElementById('slider-pull').value=0; document.getElementById('val-pull-pulley').innerText=0; markInteraction(); drawCurrentLab()" class="w-5 h-5 accent-emerald-500"> เดี่ยวตายตัว
+                            </label>
+                            <label class="flex-1 flex items-center justify-center gap-2 cursor-pointer bg-white p-3 rounded-xl border-2 border-slate-200 hover:border-emerald-400 font-medium transition shadow-sm">
+                                <input type="radio" name="pulleyType" value="2" ${labVars.pulley.type==2?'checked':''} onchange="labVars.pulley.type=2; labVars.pulley.pull=0; document.getElementById('slider-pull').value=0; document.getElementById('val-pull-pulley').innerText=0; markInteraction(); drawCurrentLab()" class="w-5 h-5 accent-emerald-500"> เดี่ยวเคลื่อนที่
+                            </label>
+                            <label class="flex-1 flex items-center justify-center gap-2 cursor-pointer bg-white p-3 rounded-xl border-2 border-slate-200 hover:border-emerald-400 font-medium transition shadow-sm">
+                                <input type="radio" name="pulleyType" value="3" ${labVars.pulley.type==3?'checked':''} onchange="labVars.pulley.type=3; labVars.pulley.pull=0; document.getElementById('slider-pull').value=0; document.getElementById('val-pull-pulley').innerText=0; markInteraction(); drawCurrentLab()" class="w-5 h-5 accent-emerald-500"> รอกพวง (ระบบที่ 1)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-span-1 bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+                        <label class="${labelCls}">น้ำหนักวัตถุ (W): <span id="val-W-pulley" class="${valCls}">${labVars.pulley.load}</span> N</label>
+                        <input type="range" min="20" max="400" value="${labVars.pulley.load}" oninput="labVars.pulley.load=this.value; document.getElementById('val-W-pulley').innerText=this.value; markInteraction(); drawCurrentLab()">
+                    </div>
+                    <div class="col-span-1 bg-white p-4 rounded-xl shadow-sm border border-slate-100 border-l-4 border-l-pink-400 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-pink-100 text-pink-600 px-3 py-1 rounded-bl-xl font-bold text-xs"><i class="fas fa-arrows-alt-v"></i> จำลองการดึง</div>
+                        <label class="${labelCls}">ดึงเชือก (ระยะทาง E): <span id="val-pull-pulley" class="${valCls}">${labVars.pulley.pull || 0}</span> cm</label>
+                        <input id="slider-pull" type="range" min="0" max="100" value="${labVars.pulley.pull || 0}" oninput="labVars.pulley.pull=this.value; document.getElementById('val-pull-pulley').innerText=this.value; markInteraction(); drawCurrentLab()">
+                    </div>
+                `;
+            } else if (index === 2) { // Inclined Plane
+                 html = `
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+                        <label class="${labelCls}">ความสูง (H): <span id="val-H" class="${valCls}">${labVars.inclined.height}</span> m</label>
+                        <input type="range" min="10" max="80" value="${labVars.inclined.height}" oninput="labVars.inclined.height=this.value; document.getElementById('val-H').innerText=this.value; markInteraction(); drawCurrentLab()">
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+                        <label class="${labelCls}">ความยาวทางลาด (L): <span id="val-L" class="${valCls}">${labVars.inclined.length}</span> m</label>
+                        <input type="range" min="50" max="200" value="${labVars.inclined.length}" oninput="labVars.inclined.length=this.value; document.getElementById('val-L').innerText=this.value; markInteraction(); drawCurrentLab()">
+                    </div>
+                    <div class="col-span-1 md:col-span-2 bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+                        <label class="${labelCls}">น้ำหนักวัตถุ (W): <span id="val-W-inc" class="${valCls}">${labVars.inclined.weight}</span> N</label>
+                        <input type="range" min="10" max="300" value="${labVars.inclined.weight}" oninput="labVars.inclined.weight=this.value; document.getElementById('val-W-inc').innerText=this.value; markInteraction(); drawCurrentLab()">
+                    </div>
+                `;
+            } else if (index === 3) { // Wheel
+                 html = `
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+                        <label class="${labelCls}">รัศมีล้อใหญ่ (R): <span id="val-R" class="${valCls}">${labVars.wheel.rWheel}</span> cm</label>
+                        <input type="range" min="40" max="150" value="${labVars.wheel.rWheel}" oninput="labVars.wheel.rWheel=this.value; document.getElementById('val-R').innerText=this.value; markInteraction(); drawCurrentLab()">
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+                        <label class="${labelCls}">รัศมีเพลาเล็ก (r): <span id="val-r" class="${valCls}">${labVars.wheel.rAxle}</span> cm</label>
+                        <input type="range" min="10" max="35" value="${labVars.wheel.rAxle}" oninput="labVars.wheel.rAxle=this.value; document.getElementById('val-r').innerText=this.value; markInteraction(); drawCurrentLab()">
+                    </div>
+                    <div class="col-span-1 md:col-span-2 bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+                        <label class="${labelCls}">น้ำหนักวัตถุที่แขวนเพลา (W): <span id="val-W-wheel" class="${valCls}">${labVars.wheel.load}</span> N</label>
+                        <input type="range" min="50" max="500" value="${labVars.wheel.load}" oninput="labVars.wheel.load=this.value; document.getElementById('val-W-wheel').innerText=this.value; markInteraction(); drawCurrentLab()">
+                    </div>
+                `;
+            } else if (index === 4) { // Screw
+                 html = `
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+                        <label class="${labelCls}">ระยะเกลียว (Pitch): <span id="val-pitch" class="${valCls}">${labVars.screw.pitch}</span> mm</label>
+                        <input type="range" min="2" max="20" value="${labVars.screw.pitch}" oninput="labVars.screw.pitch=this.value; document.getElementById('val-pitch').innerText=this.value; markInteraction(); drawCurrentLab()">
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+                        <label class="${labelCls}">ความยาวด้ามจับ (R): <span id="val-screw-r" class="${valCls}">${labVars.screw.radius}</span> mm</label>
+                        <input type="range" min="10" max="80" value="${labVars.screw.radius}" oninput="labVars.screw.radius=this.value; document.getElementById('val-screw-r').innerText=this.value; markInteraction(); drawCurrentLab()">
+                    </div>
+                `;
+            } else if (index === 5) { // Wedge
+                 html = `
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+                        <label class="${labelCls}">ความหนาของลิ่ม (L/หนา): <span id="val-thick" class="${valCls}">${labVars.wedge.thickness}</span> cm</label>
+                        <input type="range" min="5" max="50" value="${labVars.wedge.thickness}" oninput="labVars.wedge.thickness=this.value; document.getElementById('val-thick').innerText=this.value; markInteraction(); drawCurrentLab()">
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+                        <label class="${labelCls}">ความยาวของลิ่ม (H/ยาว): <span id="val-len" class="${valCls}">${labVars.wedge.length}</span> cm</label>
+                        <input type="range" min="30" max="150" value="${labVars.wedge.length}" oninput="labVars.wedge.length=this.value; document.getElementById('val-len').innerText=this.value; markInteraction(); drawCurrentLab()">
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        }
+
+        function drawCurrentLab() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const cw = canvas.width;
+            const ch = canvas.height;
+            const info = document.getElementById('lab-info');
+
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            // Common Light Theme Colors
+            const colorWood = '#d97706';
+            const colorFulcrum = '#64748b';
+            const colorRope = '#475569';
+            const colorE = '#ec4899'; // Pink for Effort
+            const colorW = '#3b82f6'; // Blue for Load
+
+            if(state.currentLabIndex === 0) { // Lever
+                const E = parseFloat(labVars.lever.effort);
+                const W = parseFloat(labVars.lever.load);
+                const lClass = parseInt(labVars.lever.class);
+                
+                const beamLength = Math.min(cw * 0.7, 500);
+                const startX = (cw - beamLength) / 2;
+                const baseY = ch * 0.7;
+
+                let fulcrumPos = 0, effortPos = 0, loadPos = 0;
+                let dirE = 1, dirW = 1; 
+
+                if(lClass === 1) { fulcrumPos = 0.5; effortPos = 0; loadPos = 1; dirE = 1; dirW = 1; } 
+                else if (lClass === 2) { fulcrumPos = 0; loadPos = 0.5; effortPos = 1; dirE = -1; dirW = 1; } 
+                else if (lClass === 3) { fulcrumPos = 0; effortPos = 0.5; loadPos = 1; dirE = -1; dirW = 1; }
+
+                const distE = Math.abs(effortPos - fulcrumPos);
+                const distW = Math.abs(loadPos - fulcrumPos);
+
+                const torqueE = E * distE;
+                const torqueW = W * distW;
+                
+                let tilt = 0, netTorque = torqueW - torqueE;
+                if(netTorque > 0.1) tilt = 0.15; 
+                else if (netTorque < -0.1) tilt = -0.15; 
+
+                const fulcrumAbsX = startX + beamLength * fulcrumPos;
+
+                // Draw Fulcrum
+                ctx.fillStyle = colorFulcrum;
+                ctx.beginPath();
+                ctx.moveTo(fulcrumAbsX, baseY);
+                ctx.lineTo(fulcrumAbsX - 20, baseY + 40);
+                ctx.lineTo(fulcrumAbsX + 20, baseY + 40);
+                ctx.fill();
+
+                // Draw Beam
+                ctx.save();
+                ctx.translate(fulcrumAbsX, baseY);
+                ctx.rotate(tilt);
+                
+                ctx.fillStyle = colorWood;
+                const relStartX = -beamLength * fulcrumPos;
+                ctx.fillRect(relStartX, -6, beamLength, 12);
+
+                function drawForceObj(pos, val, color, label, dir) {
+                    const x = relStartX + beamLength * pos;
+                    const size = 25 + (val/200)*25;
+                    ctx.fillStyle = color;
+                    
+                    if(dir === 1) { 
+                        ctx.shadowColor = 'rgba(0,0,0,0.2)'; ctx.shadowBlur = 10;
+                        ctx.fillRect(x - size/2, -6 - size, size, size);
+                        ctx.shadowBlur = 0;
+                        ctx.fillStyle = 'white'; ctx.font = 'bold 20px Prompt';
+                        ctx.fillText(label, x - 10, -6 - size/2 + 7);
+                    } else { 
+                        ctx.beginPath();
+                        ctx.moveTo(x, -6); ctx.lineTo(x, -50);
+                        ctx.lineWidth = 6; ctx.strokeStyle = color; ctx.stroke();
+                        ctx.beginPath();
+                        ctx.moveTo(x-12, -35); ctx.lineTo(x+12, -35); ctx.lineTo(x, -55); ctx.fill();
+                        ctx.fillStyle = color; ctx.font = 'bold 20px Prompt';
+                        ctx.fillText(label, x+15, -30);
+                    }
+                }
+
+                drawForceObj(effortPos, E, colorE, 'E', dirE);
+                drawForceObj(loadPos, W, colorW, 'W', dirW);
+                ctx.restore();
+
+                let status = "<span class='text-emerald-500 font-bold'>สมดุล (พอดีเป๊ะ!)</span>";
+                if(tilt < 0) status = "<span class='text-pink-500 font-bold'>แรงดึง (E) ชนะ!</span>";
+                if(tilt > 0) status = "<span class='text-blue-500 font-bold'>น้ำหนัก (W) ชนะ!</span>";
+                
+                info.innerHTML = `
+                    <div class="text-xl font-black mb-2 text-slate-800 border-b-2 border-slate-100 pb-1">คานอันดับที่ ${lClass}</div>
+                    <b>สถานะ:</b> ${status}<br>
+                    <b>โมเมนต์ฝั่ง E:</b> ${(torqueE).toFixed(2)}<br>
+                    <b>โมเมนต์ฝั่ง W:</b> ${(torqueW).toFixed(2)}
+                `;
+
+            } else if(state.currentLabIndex === 1) { // Pulley
+                const type = parseInt(labVars.pulley.type); 
+                const W = parseFloat(labVars.pulley.load);
+                const pullD = parseFloat(labVars.pulley.pull || 0); 
+                let E = W, MA = 1, desc = "";
+                
+                if(type === 1) { E = W; MA = 1; desc = "ดึง 1 เมตร ของขึ้น 1 เมตร (ไม่ผ่อนแรง)"; }
+                else if(type === 2) { E = W/2; MA = 2; desc = "ดึง 1 เมตร ของขึ้น 0.5 เมตร (ผ่อนแรง 2 เท่า)"; }
+                else if(type === 3) { E = W/4; MA = 4; desc = "ดึง 1 เมตร ของขึ้น 0.25 เมตร (รอกพวงระบบที่ 1)"; }
+
+                const px = cw/2;
+                const py = ch * 0.2;
+
+                ctx.lineWidth = 5;
+                ctx.strokeStyle = '#cbd5e1';
+
+                // Ceiling
+                ctx.beginPath(); ctx.moveTo(px-150, py-30); ctx.lineTo(px+150, py-30); ctx.stroke();
+                
+                function drawWheel(x, y) {
+                    ctx.beginPath(); ctx.arc(x, y, 20, 0, Math.PI*2); 
+                    ctx.fillStyle = '#f1f5f9'; ctx.fill();
+                    ctx.strokeStyle = '#94a3b8'; ctx.lineWidth=3; ctx.stroke();
+                    ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI*2); ctx.fillStyle = '#475569'; ctx.fill();
+                }
+
+                if(type === 1) { // Fixed
+                    const w_y = py + 120 - pullD;
+                    const e_y = py + 100 + pullD;
+                    
+                    ctx.beginPath(); ctx.moveTo(px, py-30); ctx.lineTo(px, py); ctx.lineWidth=4; ctx.strokeStyle='#94a3b8'; ctx.stroke();
+                    
+                    ctx.strokeStyle = colorRope; ctx.lineWidth = 3;
+                    ctx.beginPath(); ctx.moveTo(px-20, py); ctx.lineTo(px-20, e_y); ctx.stroke(); 
+                    ctx.beginPath(); ctx.arc(px, py, 20, Math.PI, 0, false); ctx.stroke(); 
+                    ctx.beginPath(); ctx.moveTo(px+20, py); ctx.lineTo(px+20, w_y); ctx.stroke(); 
+                    
+                    drawWheel(px, py);
+
+                    // W
+                    ctx.beginPath(); ctx.moveTo(px+20, w_y); ctx.lineTo(px+20, w_y+20); ctx.strokeStyle='#94a3b8'; ctx.lineWidth=4; ctx.stroke();
+                    ctx.fillStyle = colorW; ctx.fillRect(px-5, w_y+20, 50, 50);
+                    ctx.fillStyle = 'white'; ctx.font='bold 20px Prompt'; ctx.fillText('W', px+10, w_y+50);
+                    
+                    // E
+                    ctx.fillStyle = colorE;
+                    ctx.beginPath(); ctx.moveTo(px-20, e_y); ctx.lineTo(px-20, e_y+30); ctx.lineWidth=5; ctx.strokeStyle=colorE; ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(px-30, e_y+20); ctx.lineTo(px-10, e_y+20); ctx.lineTo(px-20, e_y+40); ctx.fill();
+                    ctx.fillText('E', px-45, e_y+25);
+                } 
+                else if(type === 2) { // Movable
+                    const mp_y = py + 100 - (pullD/2);
+                    const e_y = py + 60 - pullD; 
+
+                    ctx.strokeStyle = colorRope; ctx.lineWidth = 3;
+                    // Ceiling to MP
+                    ctx.beginPath(); ctx.moveTo(px-20, py-30); ctx.lineTo(px-20, mp_y); ctx.stroke(); 
+                    // MP to E
+                    ctx.beginPath(); ctx.moveTo(px+20, mp_y); ctx.lineTo(px+20, e_y); ctx.stroke(); 
+                    // Around MP
+                    ctx.beginPath(); ctx.arc(px, mp_y, 20, Math.PI, 0, true); ctx.stroke();
+
+                    drawWheel(px, mp_y);
+
+                    // W
+                    ctx.beginPath(); ctx.moveTo(px, mp_y); ctx.lineTo(px, mp_y+30); ctx.lineWidth=4; ctx.strokeStyle='#94a3b8'; ctx.stroke();
+                    ctx.fillStyle = colorW; ctx.fillRect(px-25, mp_y+30, 50, 50);
+                    ctx.fillStyle = 'white'; ctx.font='bold 20px Prompt'; ctx.fillText('W', px-10, mp_y+60);
+
+                    // E (Pulling UP)
+                    ctx.fillStyle = colorE;
+                    ctx.beginPath(); ctx.moveTo(px+20, e_y); ctx.lineTo(px+20, e_y-30); ctx.lineWidth=5; ctx.strokeStyle=colorE; ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(px+10, e_y-20); ctx.lineTo(px+30, e_y-20); ctx.lineTo(px+20, e_y-40); ctx.fill();
+                    ctx.fillText('E', px+35, e_y-15);
+                }
+                else if(type === 3) { // System 1 (2 movable, 1 fixed)
+                    const fp_x = px + 40; const fp_y = py + 10;
+                    const mp2_x = px - 20; const mp2_y = py + 80 - (pullD/2);
+                    const mp1_x = px - 80; const mp1_y = py + 150 - (pullD/4);
+                    const e_y = py + 60 + pullD;
+                    
+                    // Fixed Pulley bracket
+                    ctx.beginPath(); ctx.moveTo(fp_x, py-30); ctx.lineTo(fp_x, fp_y); ctx.lineWidth=4; ctx.strokeStyle='#94a3b8'; ctx.stroke();
+
+                    ctx.strokeStyle = colorRope; ctx.lineWidth = 3;
+                    
+                    // String 3 (Ceiling -> MP1 -> MP2 axle)
+                    ctx.beginPath(); ctx.moveTo(mp1_x - 20, py-30); ctx.lineTo(mp1_x - 20, mp1_y); ctx.stroke(); 
+                    ctx.beginPath(); ctx.arc(mp1_x, mp1_y, 20, Math.PI, 0, true); ctx.stroke(); 
+                    ctx.beginPath(); ctx.moveTo(mp1_x + 20, mp1_y); ctx.lineTo(mp2_x, mp2_y); ctx.stroke(); 
+                    
+                    // String 2 (Ceiling -> MP2 -> FP left)
+                    ctx.beginPath(); ctx.moveTo(mp2_x - 20, py-30); ctx.lineTo(mp2_x - 20, mp2_y); ctx.stroke(); 
+                    ctx.beginPath(); ctx.arc(mp2_x, mp2_y, 20, Math.PI, 0, true); ctx.stroke(); 
+                    ctx.beginPath(); ctx.moveTo(mp2_x + 20, mp2_y); ctx.lineTo(fp_x - 20, fp_y); ctx.stroke(); 
+
+                    // String 1 (FP left -> Over FP -> E)
+                    ctx.beginPath(); ctx.arc(fp_x, fp_y, 20, Math.PI, 0, false); ctx.stroke(); 
+                    ctx.beginPath(); ctx.moveTo(fp_x + 20, fp_y); ctx.lineTo(fp_x + 20, e_y); ctx.stroke(); 
+
+                    // Draw Wheels
+                    drawWheel(fp_x, fp_y); 
+                    drawWheel(mp2_x, mp2_y); 
+                    drawWheel(mp1_x, mp1_y); 
+
+                    // W
+                    ctx.beginPath(); ctx.moveTo(mp1_x, mp1_y); ctx.lineTo(mp1_x, mp1_y+30); ctx.lineWidth=4; ctx.strokeStyle='#94a3b8'; ctx.stroke();
+                    ctx.fillStyle = colorW; ctx.fillRect(mp1_x-25, mp1_y+30, 50, 50);
+                    ctx.fillStyle = 'white'; ctx.font='bold 20px Prompt'; ctx.fillText('W', mp1_x-10, mp1_y+60);
+
+                    // E (Pulling DOWN)
+                    ctx.fillStyle = colorE;
+                    ctx.beginPath(); ctx.moveTo(fp_x + 20, e_y); ctx.lineTo(fp_x + 20, e_y+30); ctx.lineWidth=5; ctx.strokeStyle=colorE; ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(fp_x + 10, e_y+20); ctx.lineTo(fp_x + 30, e_y+20); ctx.lineTo(fp_x + 20, e_y+40); ctx.fill();
+                    ctx.fillText('E', fp_x + 35, e_y+30);
+                }
+
+                info.innerHTML = `
+                    <div class="text-xl font-black mb-2 text-slate-800 border-b-2 border-slate-100 pb-1">ระบบรอก</div>
+                    <b>แรงดึง (E):</b> <span class="text-2xl text-pink-500 font-bold">${E.toFixed(1)} N</span><br>
+                    <b>การได้เปรียบเชิงกล (MA):</b> ${MA} เท่า<br>
+                    <span class="text-emerald-500 font-medium">${desc}</span>
+                `;
+            } else if(state.currentLabIndex === 2) { // Inclined Plane
+                let h = parseFloat(labVars.inclined.height);
+                let l = parseFloat(labVars.inclined.length);
+                if(l < h) l = h + 1.1; 
+                
+                const W = parseFloat(labVars.inclined.weight);
+                const E = (W * h) / l;
+
+                const baseW = Math.sqrt(l*l - h*h) * 3;
+                const drawH = h * 3;
+                
+                const startX = Math.max(50, cw/2 - baseW/2);
+                const startY = ch*0.8;
+
+                ctx.fillStyle = '#e2e8f0';
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(startX + baseW, startY);
+                ctx.lineTo(startX + baseW, startY - drawH);
+                ctx.closePath();
+                ctx.fill();
+                ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 4; ctx.stroke();
+
+                const angle = Math.atan2(drawH, baseW);
+                const objX = startX + baseW/2;
+                const objY = startY - (drawH/2);
+                
+                ctx.save();
+                ctx.translate(objX, objY);
+                ctx.rotate(-angle);
+                ctx.fillStyle = colorW;
+                ctx.shadowColor = 'rgba(0,0,0,0.2)'; ctx.shadowBlur = 10;
+                ctx.fillRect(-25, -50, 50, 50);
+                
+                ctx.shadowBlur = 0;
+                ctx.strokeStyle = colorE; ctx.lineWidth = 6;
+                ctx.beginPath(); ctx.moveTo(25, -25); ctx.lineTo(80, -25); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(80, -25); ctx.lineTo(65, -40); ctx.lineTo(65, -10); ctx.fillStyle=colorE; ctx.fill();
+                ctx.font = 'bold 24px Prompt'; ctx.fillText('E', 40, -40);
+                ctx.fillStyle = 'white'; ctx.fillText('W', -12, -18);
+                ctx.restore();
+
+                info.innerHTML = `
+                    <div class="text-xl font-black mb-2 text-slate-800 border-b-2 border-slate-100 pb-1">พื้นเอียง</div>
+                    <b>แรงดึง (E):</b> <span class="text-2xl text-pink-500 font-bold">${E.toFixed(1)} N</span><br>
+                    <b>ผ่อนแรง:</b> ${(l/h).toFixed(2)} เท่า
+                `;
+            } else if (state.currentLabIndex === 3) { // Wheel & Axle
+                const R = parseFloat(labVars.wheel.rWheel);
+                const r = parseFloat(labVars.wheel.rAxle);
+                const W = parseFloat(labVars.wheel.load);
+                const E = (W * r) / R;
+                const cx = cw/2, cy = ch/2.5;
+
+                ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); 
+                ctx.fillStyle = '#cbd5e1'; ctx.fill(); ctx.strokeStyle='#64748b'; ctx.lineWidth=3; ctx.stroke();
+                
+                ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI*2); 
+                ctx.strokeStyle = '#60a5fa'; ctx.lineWidth = 10; ctx.stroke();
+                
+                for(let i=0; i<4; i++){
+                    ctx.beginPath(); ctx.moveTo(cx, cy); 
+                    ctx.lineTo(cx + R*Math.cos(i*Math.PI/2), cy + R*Math.sin(i*Math.PI/2));
+                    ctx.lineWidth = 4; ctx.strokeStyle='#94a3b8'; ctx.stroke();
+                }
+
+                ctx.beginPath(); ctx.moveTo(cx+r, cy); ctx.lineTo(cx+r, cy+150); ctx.strokeStyle=colorRope; ctx.lineWidth=3; ctx.stroke();
+                ctx.fillStyle = colorW; ctx.fillRect(cx+r-20, cy+150, 40, 50); ctx.fillStyle='white'; ctx.font='bold 20px Prompt'; ctx.fillText('W', cx+r-12, cy+180);
+
+                ctx.beginPath(); ctx.moveTo(cx-R, cy); ctx.lineTo(cx-R, cy+80); ctx.stroke();
+                ctx.fillStyle = colorE; 
+                ctx.beginPath(); ctx.moveTo(cx-R, cy+80); ctx.lineTo(cx-R-12, cy+65); ctx.lineTo(cx-R+12, cy+65); ctx.fill();
+                ctx.font='bold 24px Prompt'; ctx.fillText('E', cx-R-30, cy+70);
+
+                info.innerHTML = `
+                    <div class="text-xl font-black mb-2 text-slate-800 border-b-2 border-slate-100 pb-1">ล้อและเพลา</div>
+                    <b>แรงหมุนที่ล้อ (E):</b> <span class="text-2xl text-pink-500 font-bold">${E.toFixed(1)} N</span><br>
+                    <b>ผ่อนแรง:</b> ${(R/r).toFixed(2)} เท่า
+                `;
+            } else if (state.currentLabIndex === 4) { // Screw
+                const pitch = parseFloat(labVars.screw.pitch);
+                const r = parseFloat(labVars.screw.radius);
+                const cx = cw/2, cy = ch/2 + 30, screwH = 200;
+                
+                ctx.fillStyle = '#cbd5e1'; ctx.fillRect(cx - 20, cy - screwH/2, 40, screwH);
+                ctx.beginPath(); ctx.moveTo(cx-20, cy+screwH/2); ctx.lineTo(cx+20, cy+screwH/2); ctx.lineTo(cx, cy+screwH/2 + 40); ctx.fillStyle='#cbd5e1'; ctx.fill();
+
+                ctx.strokeStyle = '#475569'; ctx.lineWidth = 4;
+                let actualPitch = Math.max(5, pitch * 2.5); 
+                for(let y = cy - screwH/2 + 10; y < cy + screwH/2; y += actualPitch) {
+                    ctx.beginPath(); ctx.moveTo(cx - 20, y); ctx.lineTo(cx + 20, y + actualPitch*0.6); ctx.stroke();
+                }
+
+                ctx.fillStyle = colorE; ctx.fillRect(cx - r - 25, cy - screwH/2 - 30, (r+25)*2, 30);
+                ctx.fillStyle = 'white'; ctx.font='bold 20px Prompt'; ctx.fillText('E (หมุนด้ามจับ)', cx-60, cy - screwH/2 - 8);
+                
+                const MA = (2 * Math.PI * r) / pitch;
+                info.innerHTML = `
+                    <div class="text-xl font-black mb-2 text-slate-800 border-b-2 border-slate-100 pb-1">สกรูเกลียว</div>
+                    <b>ผ่อนแรงประมาณ:</b> <span class="text-2xl text-pink-500 font-bold">${MA.toFixed(1)} เท่า</span>
+                `;
+
+            } else if (state.currentLabIndex === 5) { // Wedge
+                const t = parseFloat(labVars.wedge.thickness);
+                const l = parseFloat(labVars.wedge.length);
+                const cx = cw/2, cy = ch/2;
+
+                ctx.fillStyle = colorWood; ctx.fillRect(cx - 80, cy + l/2, 160, 100); 
+                
+                ctx.fillStyle = '#f1f5f9';
+                ctx.beginPath();
+                ctx.moveTo(cx - t, cy - l/2); 
+                ctx.lineTo(cx + t, cy - l/2); 
+                ctx.lineTo(cx, cy + l/2 + 40); 
+                ctx.closePath(); ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle='#94a3b8'; ctx.stroke();
+
+                ctx.fillStyle = colorE;
+                ctx.beginPath(); ctx.moveTo(cx, cy-l/2 - 60); ctx.lineTo(cx, cy-l/2 - 10); ctx.lineWidth=6; ctx.strokeStyle=colorE; ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(cx-15, cy-l/2 - 25); ctx.lineTo(cx+15, cy-l/2 - 25); ctx.lineTo(cx, cy-l/2 - 5); ctx.fill();
+                ctx.font='bold 24px Prompt'; ctx.fillText('E', cx+20, cy-l/2 - 30);
+                
+                const MA = l / t;
+                info.innerHTML = `
+                    <div class="text-xl font-black mb-2 text-slate-800 border-b-2 border-slate-100 pb-1">ลิ่มเจาะ</div>
+                    <b>ผ่อนแรง:</b> <span class="text-2xl text-pink-500 font-bold">${MA.toFixed(1)} เท่า</span>
+                `;
+            }
+        }
+
+        // --- Step 3: Quiz & Map ---
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function initQuizRun() {
+            state.quizStep = 0;
+            state.flags = 0;
+            
+            // คัดลอกและสุ่มข้อสอบ
+            let shuffledQs = JSON.parse(JSON.stringify(questions));
+            shuffleArray(shuffledQs);
+            shuffledQs = shuffledQs.slice(0, 15);
+            
+            // สุ่มตัวเลือกในแต่ละข้อ
+            shuffledQs.forEach(q => {
+                let choicesWithMeta = q.choices.map((c, i) => ({ text: c, isCorrect: i === q.ans }));
+                shuffleArray(choicesWithMeta);
+                q.choices = choicesWithMeta.map(c => c.text);
+                q.ans = choicesWithMeta.findIndex(c => c.isCorrect);
+            });
+            
+            state.quizActiveQuestions = shuffledQs;
+            initMap();
+            loadQuestion();
+        }
+
+        function goToQuiz() {
+            if(state.maxStep >= 3) {
+                switchScreen('screen-quiz');
+                
+                // Reset Quiz View
+                document.getElementById('quiz-active-area').classList.remove('hidden');
+                document.getElementById('quiz-result-area').classList.add('hidden');
+                document.getElementById('quiz-result-area').classList.remove('flex');
+                
+                if(state.quizStep === 0 || state.quizStep >= 15) {
+                    initQuizRun();
+                }
+            }
+        }
+
+        function initMap() {
+            const container = document.getElementById('flag-map');
+            container.innerHTML = '';
+            for(let i=1; i<=15; i++) {
+                const div = document.createElement('div');
+                div.className = 'map-node';
+                div.id = `map-node-${i}`;
+                div.innerHTML = `<span class="text-xs absolute top-1 left-1 opacity-40">${i}</span><i class="fas fa-flag relative z-10"></i>`;
+                container.appendChild(div);
+            }
+        }
+
+        function loadQuestion() {
+            const q = state.quizActiveQuestions[state.quizStep];
+            document.getElementById('q-num').innerText = state.quizStep + 1;
+            document.getElementById('q-score').innerText = state.flags;
+            document.getElementById('question-text').innerText = q.q;
+
+            const container = document.getElementById('choices-container');
+            container.innerHTML = '';
+            
+            q.choices.forEach((choice, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left bg-white hover:bg-blue-50 text-slate-700 font-bold py-5 px-8 rounded-2xl transition duration-300 border-4 border-slate-100 hover:border-blue-300 text-xl shadow-sm hover:shadow-md transform hover:-translate-y-1 flex items-center";
+                btn.innerHTML = `<span class="inline-flex w-12 h-12 bg-slate-100 text-slate-500 rounded-full items-center justify-center font-black mr-4 text-xl border-2 border-slate-200">${String.fromCharCode(65 + idx)}</span> <span class="flex-1">${choice}</span>`;
+                btn.onclick = () => answerQuestion(idx, btn);
+                container.appendChild(btn);
+            });
+        }
+
+        function answerQuestion(choiceIdx, btnElement) {
+            const btns = document.getElementById('choices-container').querySelectorAll('button');
+            btns.forEach(b => b.disabled = true);
+
+            const q = state.quizActiveQuestions[state.quizStep];
+            const isCorrect = choiceIdx === q.ans;
+            const spanLet = btnElement.querySelector('span:first-child');
+
+            let popupTitle = "", popupMsg = "", popupIcon = "";
+
+            if(isCorrect) {
+                btnElement.className = "w-full text-left bg-green-50 text-green-800 font-bold py-5 px-8 rounded-2xl border-4 border-green-400 text-xl shadow-lg flex items-center transform scale-[1.02] transition";
+                spanLet.className = "inline-flex w-12 h-12 bg-green-500 text-white rounded-full items-center justify-center font-black mr-4 text-xl shadow-sm";
+                spanLet.innerHTML = '<i class="fas fa-check"></i>';
+                state.flags += 1;
+                
+                popupTitle = "เก่งมาก! ถูกต้อง 🎉";
+                popupMsg = "เก็บธงเพิ่มได้ 1 อัน เตรียมตัวเอาไปปักตอนจบได้เลย!";
+                popupIcon = '<i class="fas fa-flag text-green-500 animate-bounce"></i>';
+                confetti({ particleCount: 40, spread: 70, origin: { y: 0.7 }, colors: ['#4ade80', '#fbbf24', '#f472b6'] });
+            } else {
+                btnElement.className = "w-full text-left bg-red-50 text-red-800 font-bold py-5 px-8 rounded-2xl border-4 border-red-400 text-xl flex items-center";
+                spanLet.className = "inline-flex w-12 h-12 bg-red-500 text-white rounded-full items-center justify-center font-black mr-4 text-xl";
+                spanLet.innerHTML = '<i class="fas fa-times"></i>';
+                
+                // Highlight correct
+                const correctBtn = btns[q.ans];
+                correctBtn.className = "w-full text-left bg-green-50 text-green-800 font-bold py-5 px-8 rounded-2xl border-4 border-green-400 text-xl flex items-center opacity-80 mt-2";
+                correctBtn.querySelector('span:first-child').className = "inline-flex w-12 h-12 bg-green-500 text-white rounded-full items-center justify-center font-black mr-4 text-xl";
+
+                popupTitle = "อ๊ะ! พลาดไปนิด 😅";
+                popupMsg = "ไม่เป็นไรนะ ลองใหม่ในข้อถัดไป สู้ๆ!";
+                popupIcon = '<i class="fas fa-heart-crack text-red-400"></i>';
+            }
+
+            document.getElementById('q-score').innerText = state.flags;
+
+            // Show Popup
+            setTimeout(() => {
+                document.getElementById('quiz-alert-title').innerText = popupTitle;
+                document.getElementById('quiz-alert-title').className = isCorrect ? "text-4xl font-black mb-3 text-green-500 relative z-10" : "text-4xl font-black mb-3 text-red-500 relative z-10";
+                document.getElementById('quiz-alert-message').innerText = popupMsg;
+                document.getElementById('quiz-alert-icon').innerHTML = popupIcon;
+                
+                document.getElementById('quiz-alert').classList.remove('hidden');
+                setTimeout(() => {
+                    document.getElementById('quiz-alert-box').classList.remove('scale-95');
+                    document.getElementById('quiz-alert-box').classList.add('scale-100');
+                }, 10);
+            }, 800);
+        }
+
+        function nextQuizQuestion() {
+            document.getElementById('quiz-alert-box').classList.remove('scale-100');
+            document.getElementById('quiz-alert-box').classList.add('scale-95');
+            setTimeout(() => {
+                document.getElementById('quiz-alert').classList.add('hidden');
+                
+                state.quizStep++;
+                if(state.quizStep < questions.length) {
+                    loadQuestion();
+                } else {
+                    finishQuizAndRevealPrize();
+                }
+            }, 300);
+        }
+
+        function finishQuizAndRevealPrize() {
+            // Hide active quiz, show map
+            document.getElementById('quiz-active-area').classList.add('hidden');
+            document.getElementById('quiz-result-area').classList.remove('hidden');
+            document.getElementById('quiz-result-area').classList.add('flex');
+            
+            // Map planting animation sequence
+            let timeDelay = 500;
+            if(state.flags > 0) {
+                for(let i=1; i<=state.flags; i++) {
+                    setTimeout(() => {
+                        const node = document.getElementById(`map-node-${i}`);
+                        node.classList.add('has-flag');
+                        // Mini confetti per flag
+                        const rect = node.getBoundingClientRect();
+                        confetti({ particleCount: 5, spread: 20, origin: { x: (rect.left + rect.width/2)/window.innerWidth, y: (rect.top + rect.height/2)/window.innerHeight }, colors: ['#ea580c'] });
+                    }, timeDelay);
+                    timeDelay += 300; // delay between each flag
+                }
+            }
+
+            // Reveal Prize after planting all flags
+            setTimeout(() => {
+                const revealBox = document.getElementById('prize-reveal-box');
+                const pIcon = document.getElementById('prize-icon');
+                const pName = document.getElementById('prize-name');
+                const actionBtn = document.getElementById('prize-action-btn');
+
+                revealBox.classList.remove('hidden');
+                revealBox.classList.add('flex');
+                
+                setTimeout(() => revealBox.classList.remove('scale-90'), 50); // pop in effect
+
+                let passed = state.flags >= 9; // ผ่าน 60% ของ 15 ข้อ (9 คะแนน)
+
+                if(passed) {
+                    if(state.maxStep < 4) state.maxStep = 4; 
+                    updateNavState();
+
+                    if(state.flags >= 15) {
+                        pIcon.innerHTML = '<i class="fas fa-trophy text-yellow-400"></i>';
+                        pName.innerText = "ถ้วยรางวัลอัจฉริยะ (ขั้นเทพ!)";
+                        fireBigConfetti();
+                    } else if(state.flags >= 11) {
+                        pIcon.innerHTML = '<i class="fas fa-microscope text-blue-500"></i>';
+                        pName.innerText = "กล้องจุลทรรศน์ไขความลับจักรวาล";
+                        fireBigConfetti();
+                    } else {
+                        pIcon.innerHTML = '<i class="fas fa-glasses text-emerald-500"></i>';
+                        pName.innerText = "แว่นตานักประดิษฐ์สุดคูล";
+                        confetti();
+                    }
+
+                    actionBtn.innerHTML = `รับเกียรติบัตร! <i class="fas fa-award text-3xl"></i>`;
+                    actionBtn.onclick = continueToCert;
+                    actionBtn.className = "btn-primary w-full py-5 px-8 rounded-2xl shadow-xl text-2xl font-bold flex justify-center items-center gap-3";
+                    
+                    document.getElementById('cert-score-display').innerText = `${state.flags}/15`;
+                    document.getElementById('cert-percent-display').innerText = `${Math.round((state.flags/15)*100)}%`;
+
+                } else {
+                    pIcon.innerHTML = '<i class="fas fa-heart-crack text-red-400"></i>';
+                    pName.innerText = `ได้คะแนน ${state.flags}/15\n(ต้องผ่าน 60% หรือ 9 คะแนนขึ้นไป)`;
+                    
+                    actionBtn.innerHTML = `ลองทดสอบอีกครั้ง <i class="fas fa-redo ml-2"></i>`;
+                    actionBtn.onclick = goToQuiz;
+                    actionBtn.className = "bg-white text-slate-600 border-4 border-slate-200 w-full py-5 px-8 rounded-2xl shadow-md text-xl font-bold flex justify-center items-center gap-3 hover:bg-slate-50 transition";
+                }
+            }, timeDelay + 800);
+        }
+
+        function continueToCert() {
+            generateCertificate();
+            switchScreen('screen-cert');
+        }
+
+        // --- Step 4: Certificate ---
+        function generateCertificate() {
+            document.getElementById('cert-name').innerText = state.studentName;
+            const today = new Date();
+            const dateStr = today.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+            document.getElementById('cert-date').innerText = dateStr;
+        }
+
+        function fireBigConfetti() {
+            var duration = 3000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                confetti({ particleCount: 7, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ec4899', '#f97316', '#3b82f6', '#fbbf24'] });
+                confetti({ particleCount: 7, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ec4899', '#f97316', '#3b82f6', '#fbbf24'] });
+                if (Date.now() < end) requestAnimationFrame(frame);
+            }());
+        }
+
+        function saveCertAsImage() {
+            const certBox = document.getElementById('certificate-box');
+            
+            // ยกเลิกการ scale ชั่วคราวเพื่อให้แคปภาพได้เต็มและไม่เบลอ/ตกขอบ
+            const originalTransform = certBox.style.transform;
+            certBox.style.transform = 'none';
+            
+            // เปลี่ยนข้อความปุ่มเพื่อแจ้งสถานะ
+            const btn = document.querySelector('button[onclick="saveCertAsImage()"]');
+            const originalBtnHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังประมวลผล...';
+            btn.disabled = true;
+
+            html2canvas(certBox, {
+                scale: 2, // เพิ่มความละเอียดภาพ (2x)
+                backgroundColor: "#ffffff",
+                useCORS: true
+            }).then(canvas => {
+                // คืนค่ารูปแบบและปุ่มเดิม
+                certBox.style.transform = originalTransform;
+                btn.innerHTML = originalBtnHtml;
+                btn.disabled = false;
+
+                // สร้างลิงก์สำหรับดาวน์โหลดรูปภาพ
+                const link = document.createElement('a');
+                link.download = `Certificate_${state.studentName || 'ScienceLab'}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(err => {
+                console.error("Error generating image: ", err);
+                certBox.style.transform = originalTransform;
+                btn.innerHTML = originalBtnHtml;
+                btn.disabled = false;
+                alert("เกิดข้อผิดพลาดในการบันทึกภาพ กรุณาลองใหม่อีกครั้ง");
+            });
+        }
+
+        // Initialize App UI
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('screen-login').classList.remove('hidden-screen');
+        });
+
+    </script>
+</body>
+</html>
