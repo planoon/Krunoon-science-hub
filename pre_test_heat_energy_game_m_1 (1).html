@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Science Quest M.1: พลังงานความร้อน & Anti-Cheating System</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Kanit -->
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- KaTeX for Science Formulas -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body {
+      font-family: 'Kanit', sans-serif;
+      background: radial-gradient(circle at 20% 20%, #0f172a, #1e1b4b, #090d16);
+      min-height: 100vh;
+      color: #f8fafc;
+      /* Anti-Cheating: Prevent text selection */
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.78);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #38bdf8, #818cf8, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .option-btn {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .option-btn:hover:not(:disabled) {
+      transform: translateY(-2px) scale(1.005);
+      box-shadow: 0 10px 25px rgba(99, 102, 241, 0.25);
+    }
+    .animate-bounce-short {
+      animation: bounce 0.6s ease infinite alternate;
+    }
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-6px); }
+    }
+    .siren-glow {
+      box-shadow: 0 0 50px rgba(244, 63, 94, 0.6);
+      animation: sirenPulse 1s infinite alternate;
+    }
+    @keyframes sirenPulse {
+      from { border-color: rgba(244, 63, 94, 0.4); }
+      to { border-color: rgba(244, 63, 94, 1); }
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen justify-between p-3 sm:p-6" oncontextmenu="return false;">
+
+  <!-- Header Navigation -->
+  <header class="max-w-4xl w-full mx-auto flex items-center justify-between mb-4">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-pink-500 flex items-center justify-center text-white text-xl shadow-lg">
+        <i class="fa-solid fa-temperature-arrow-up"></i>
+      </div>
+      <div>
+        <h1 class="font-bold text-base sm:text-lg text-slate-100 leading-tight">Science Quest ม.1</h1>
+        <p class="text-xs text-indigo-300">แบบทดสอบก่อนเรียน: พลังงานความร้อน (Anti-Cheat Active)</p>
+      </div>
+    </div>
+    
+    <button onclick="openSettingsModal()" class="px-3.5 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs sm:text-sm border border-slate-700 flex items-center gap-2 transition shadow">
+      <i class="fa-solid fa-gear text-indigo-400"></i>
+      <span class="hidden sm:inline">ตั้งค่าหลังบ้าน (Google Sheet)</span>
+    </button>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="max-w-4xl w-full mx-auto my-auto">
+    
+    <!-- STEP 1: STUDENT LOGIN & AVATAR SCREEN -->
+    <div id="startScreen" class="glass-card rounded-3xl p-6 sm:p-10 text-center relative overflow-hidden">
+      <div class="absolute -top-12 -right-12 w-44 h-44 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-12 -left-12 w-44 h-44 bg-pink-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-semibold mb-3 border border-indigo-500/30">
+        <i class="fa-solid fa-bolt"></i> Pre-test Assessment Game (20 ข้อ)
+      </div>
+
+      <!-- Anti-Cheating Shield Badge -->
+      <div class="mb-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 text-[11px] font-medium border border-rose-500/30">
+        <i class="fa-solid fa-shield-halved text-rose-400"></i> มีระบบล็อกป้องกันการสลับหน้าจอ/แอบค้นหาคำตอบ
+      </div>
+
+      <h2 class="text-2xl sm:text-4xl font-extrabold mb-3 gradient-text">การผจญภัยเรื่อง "พลังงานความร้อน"</h2>
+      <p class="text-slate-300 text-xs sm:text-sm max-w-xl mx-auto mb-6 leading-relaxed">
+        ท้าทายความรู้ก่อนเรียนวิชาวิทยาศาสตร์ ชั้น ม.1 สะสมคะแนน ทำ Combo พร้อมบันทึกผลสอบส่งตรงถึงระบบของคุณครูทันที!
+      </p>
+
+      <!-- Avatar Selector -->
+      <div class="mb-6">
+        <label class="block text-xs font-semibold text-slate-400 mb-2">เลือกตัวละครของคุณ:</label>
+        <div class="flex justify-center gap-3 sm:gap-4" id="avatarSelector">
+          <button type="button" onclick="selectAvatar('👨‍🔬')" class="avatar-option w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-slate-800/90 border-2 border-indigo-500 text-2xl flex items-center justify-center transition hover:scale-110 shadow-md">👨‍🔬</button>
+          <button type="button" onclick="selectAvatar('👩‍🔬')" class="avatar-option w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-slate-800/90 border-2 border-transparent text-2xl flex items-center justify-center transition hover:scale-110 shadow-md">👩‍🔬</button>
+          <button type="button" onclick="selectAvatar('🚀')" class="avatar-option w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-slate-800/90 border-2 border-transparent text-2xl flex items-center justify-center transition hover:scale-110 shadow-md">🚀</button>
+          <button type="button" onclick="selectAvatar('🤖')" class="avatar-option w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-slate-800/90 border-2 border-transparent text-2xl flex items-center justify-center transition hover:scale-110 shadow-md">🤖</button>
+          <button type="button" onclick="selectAvatar('🔥')" class="avatar-option w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-slate-800/90 border-2 border-transparent text-2xl flex items-center justify-center transition hover:scale-110 shadow-md">🔥</button>
+        </div>
+      </div>
+
+      <!-- Student Input Form -->
+      <div class="max-w-md mx-auto space-y-4 text-left mb-6">
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">ชื่อ - นามสกุล <span class="text-pink-400">*</span></label>
+          <input type="text" id="studentName" placeholder="เช่น ด.ช. รักเรียน ขยันยิ่ง" class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 text-sm">
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">เลขที่ <span class="text-pink-400">*</span></label>
+            <input type="number" id="studentNo" placeholder="เช่น 15" class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">ห้องเรียน <span class="text-pink-400">*</span></label>
+            <input type="text" id="studentRoom" placeholder="เช่น ม.1/1" class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 text-sm">
+          </div>
+        </div>
+      </div>
+
+      <!-- Security Notice Box -->
+      <div class="max-w-md mx-auto mb-6 p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-left text-xs space-y-1">
+        <div class="font-bold flex items-center gap-1.5 text-amber-400">
+          <i class="fa-solid fa-triangle-exclamation"></i> กฎและข้อตกลงในการทำแบบทดสอบ:
+        </div>
+        <ul class="list-disc list-inside space-y-0.5 text-slate-300 text-[11px]">
+          <li>ห้ามสลับแท็บ ย่อเบราว์เซอร์ หรือเปิดแอปอื่นเด็ดขาด</li>
+          <li>เตือนสลับหน้าจอได้ไม่เกิน 2 ครั้ง (ครั้งที่ 3 ระบบจะส่งข้อสอบทันที)</li>
+          <li>ระบบบล็อกการคัดลอกโจทย์และการกดคลิกขวา</li>
+        </ul>
+      </div>
+
+      <!-- Form Error Banner -->
+      <div id="formError" class="hidden max-w-md mx-auto mb-4 p-3 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs text-center font-medium">
+        <i class="fa-solid fa-circle-exclamation mr-1"></i> กรุณากรอกชื่อ เลขที่ และห้องเรียนให้ครบถ้วนครับ
+      </div>
+
+      <button onclick="startGame()" class="w-full max-w-md py-4 rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-bold text-lg shadow-lg hover:brightness-110 active:scale-95 transition">
+        เริ่มทำแบบทดสอบเต็มหน้าจอ <i class="fa-solid fa-play ml-2"></i>
+      </button>
+
+      <div class="mt-4 text-xs text-slate-400 flex items-center justify-center gap-2">
+        <i class="fa-solid fa-cloud-arrow-up text-emerald-400"></i>
+        <span>ระบบจะบันทึกคะแนนและจำนวนครั้งที่สลับหน้าจอเข้า Google Sheet</span>
+      </div>
+    </div>
+
+    <!-- STEP 2: INTERACTIVE GAMEPLAY SCREEN -->
+    <div id="gameScreen" class="hidden space-y-4">
+      
+      <!-- Top Status Header -->
+      <div class="glass-card rounded-2xl p-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span id="playerAvatarDisplay" class="text-3xl">👨‍🔬</span>
+          <div>
+            <p id="playerNameDisplay" class="font-bold text-sm text-slate-100 leading-tight">-</p>
+            <p id="playerRoomDisplay" class="text-xs text-indigo-300">-</p>
+          </div>
+        </div>
+
+        <!-- Combo & Anti-Cheat Tally -->
+        <div class="flex items-center gap-2 sm:gap-4">
+          <div id="comboBadge" class="hidden px-3.5 py-1.5 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 text-xs font-bold items-center gap-1.5 animate-bounce-short">
+            <i class="fa-solid fa-fire text-amber-400"></i>
+            <span id="comboText">Combo x2!</span>
+          </div>
+
+          <div class="hidden sm:flex items-center gap-1 px-3 py-1 rounded-full bg-rose-500/20 border border-rose-500/30 text-rose-300 text-xs">
+            <i class="fa-solid fa-shield-cat"></i>
+            <span>สลับหน้าจอ: <strong id="headerSwitchCount" class="text-rose-400">0</strong>/2</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4 text-right">
+          <div>
+            <p class="text-xs text-slate-400">คะแนนปัจจุบัน</p>
+            <p id="currentScore" class="font-bold text-xl text-emerald-400">0</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Question Box -->
+      <div class="glass-card rounded-3xl p-5 sm:p-8 space-y-6 relative">
+        
+        <!-- Progress Bar & Timer -->
+        <div class="space-y-2">
+          <div class="flex justify-between items-center text-xs text-slate-400">
+            <span>คำถามข้อที่ <strong id="questionNum" class="text-indigo-400 text-sm">1</strong> / 20</span>
+            <span class="flex items-center gap-1.5"><i class="fa-regular fa-clock"></i> เวลา: <span id="timeDisplay" class="text-slate-200 font-mono">00:00</span></span>
+          </div>
+          <div class="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden">
+            <div id="progressBar" class="bg-gradient-to-r from-indigo-500 to-pink-500 h-2.5 rounded-full transition-all duration-300" style="width: 5%"></div>
+          </div>
+        </div>
+
+        <!-- Question Body -->
+        <div class="py-2">
+          <h3 id="questionText" class="text-base sm:text-xl font-medium text-slate-100 leading-relaxed">
+            กำลังโหลดคำถาม...
+          </h3>
+        </div>
+
+        <!-- Choice Options -->
+        <div id="optionsContainer" class="grid grid-cols-1 gap-3">
+          <!-- Dynamically populated via JavaScript -->
+        </div>
+
+        <!-- Hint Section -->
+        <div class="flex justify-between items-center pt-2 border-t border-slate-800/80">
+          <button onclick="toggleHint()" class="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1.5 transition">
+            <i class="fa-regular fa-lightbulb"></i>
+            <span>คำแนะนำเพิ่มเติม (Hint)</span>
+          </button>
+          <span id="hintText" class="hidden text-xs text-amber-300 bg-amber-500/10 px-3 py-1.5 rounded-xl border border-amber-500/20 max-w-md"></span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- STEP 3: RESULT & DETAILED REVIEW SCREEN -->
+    <div id="resultScreen" class="hidden glass-card rounded-3xl p-6 sm:p-10 text-center space-y-8">
+      
+      <div class="inline-flex p-4 rounded-3xl bg-indigo-500/20 text-indigo-400 text-4xl mb-1 shadow-inner">
+        <i class="fa-solid fa-trophy"></i>
+      </div>
+
+      <div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-100 mb-1">ทำแบบทดสอบเสร็จสิ้น!</h2>
+        <p class="text-slate-400 text-xs sm:text-sm">สรุปผลการทดสอบก่อนเรียน วิชา วิทยาศาสตร์ ม.1 (เรื่อง พลังงานความร้อน)</p>
+      </div>
+
+      <!-- Auto-submitted Banner if Cheated -->
+      <div id="cheatedNoticeBanner" class="hidden max-w-md mx-auto p-3.5 rounded-2xl bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs text-center font-medium space-y-1">
+        <div class="font-bold flex items-center justify-center gap-1.5 text-rose-400">
+          <i class="fa-solid fa-triangle-exclamation text-base"></i> ถูกส่งข้อสอบอัตโนมัติเนื่องจากละเมิดกฎการสอบ
+        </div>
+        <p id="cheatedReasonText" class="text-[11px] text-slate-300">ตรวจพบการสลับหน้าจอ/ย่อแอปพลิเคชันเกิน 2 ครั้ง</p>
+      </div>
+
+      <!-- Score Summary Card -->
+      <div class="max-w-md mx-auto bg-slate-900/90 rounded-2xl p-6 border border-slate-800 space-y-4">
+        <div class="flex justify-around items-center">
+          <div>
+            <p class="text-xs text-slate-400 mb-1">คะแนนรวมที่ได้</p>
+            <p class="text-4xl font-extrabold text-emerald-400"><span id="finalScoreDisplay">0</span> <span class="text-base text-slate-400 font-normal">/ 20</span></p>
+          </div>
+          <div class="h-10 w-px bg-slate-800"></div>
+          <div>
+            <p class="text-xs text-slate-400 mb-1">คิดเป็นร้อยละ</p>
+            <p id="percentageDisplay" class="text-4xl font-extrabold text-indigo-400">0%</p>
+          </div>
+        </div>
+
+        <!-- Rank Stamp / Badge -->
+        <div id="gradeBadge" class="py-2.5 px-4 rounded-xl bg-indigo-500/20 text-indigo-300 text-xs sm:text-sm font-semibold border border-indigo-500/30">
+          ระดับ: กำลังประเมินผล...
+        </div>
+
+        <!-- Anti-cheat Switch Count Stats -->
+        <div class="pt-2 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400">
+          <span><i class="fa-solid fa-shield-halved text-indigo-400 mr-1"></i> ประวัติสลับหน้าจอ:</span>
+          <span id="tabSwitchResultDisplay" class="font-bold text-slate-200">0 ครั้ง</span>
+        </div>
+      </div>
+
+      <!-- Google Sheet Status Bar -->
+      <div id="sheetStatusBox" class="max-w-md mx-auto p-4 rounded-2xl bg-slate-900/80 border border-slate-800 text-xs flex items-center gap-3">
+        <div id="sheetStatusIcon" class="text-xl text-indigo-400 animate-spin">
+          <i class="fa-solid fa-circle-notch"></i>
+        </div>
+        <div class="text-left flex-1">
+          <p id="sheetStatusTitle" class="font-bold text-slate-200">กำลังส่งคะแนนเข้า Google Sheet...</p>
+          <p id="sheetStatusDesc" class="text-slate-400 text-[11px]">ระบบกำลังส่งผลสอบเข้าฐานข้อมูลของคุณครู</p>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
+        <button onclick="toggleReviewSection()" class="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-semibold border border-slate-700 transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-list-check text-indigo-400"></i>
+          <span>ดูเฉลยละเอียด 20 ข้อ</span>
+        </button>
+        <button onclick="resetGame()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-sm font-semibold hover:brightness-110 transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-rotate-right"></i>
+          <span>ทำแบบทดสอบอีกครั้ง</span>
+        </button>
+      </div>
+
+      <!-- Detailed Answer Review List -->
+      <div id="reviewSection" class="hidden text-left max-w-2xl mx-auto space-y-4 pt-4 border-t border-slate-800/80">
+        <h3 class="font-bold text-base sm:text-lg text-slate-200 mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-book-open text-indigo-400"></i> เฉลยและคำอธิบายอย่างละเอียด
+        </h3>
+        <div id="reviewList" class="space-y-3">
+          <!-- Dynamically populated via JS -->
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Anti-Cheating Warning Modal Siren -->
+  <div id="warningModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card siren-glow rounded-3xl max-w-md w-full p-6 text-center space-y-5 text-slate-200 border-2 border-rose-500">
+      
+      <div class="w-16 h-16 mx-auto rounded-full bg-rose-500/20 text-rose-400 text-3xl flex items-center justify-center animate-bounce">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+
+      <div>
+        <h3 class="font-bold text-xl text-rose-400 mb-1">เตือนความปลอดภัย! (Anti-Cheating)</h3>
+        <p id="warningModalCountText" class="text-slate-200 font-semibold text-sm">ตรวจพบการสลับหน้าจอ ครั้งที่ 1 / 2</p>
+      </div>
+
+      <p id="warningModalDetail" class="text-xs text-slate-300 bg-rose-950/40 p-3 rounded-xl border border-rose-500/30">
+        ห้ามออกจากหน้าจอเกม ห้ามสลับแท็บ หรือเปิดแอปอื่นเพื่อหาคำตอบ หากสลับหน้าจออีกครั้ง ระบบจะส่งข้อสอบและปรับคะแนนทันที!
+      </p>
+
+      <button onclick="dismissWarningModal()" class="w-full py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm shadow-lg transition">
+        ฉันเข้าใจแล้ว กลับเข้าสู่ข้อสอบ <i class="fa-solid fa-arrow-right ml-1"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- SETTINGS MODAL (Google Sheet Script Setup for Teacher) -->
+  <div id="settingsModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card rounded-3xl max-w-xl w-full p-6 space-y-5 text-slate-200 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-base sm:text-lg flex items-center gap-2 text-indigo-400">
+          <i class="fa-solid fa-table"></i> ตั้งค่าเชื่อมต่อ Google Sheet (สำหรับครู)
+        </h3>
+        <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <div class="space-y-3 text-xs text-slate-300">
+        <p>คุณครูสามารถนำคะแนนของนักเรียนไปเก็บบน Google Sheet โดยทำตามขั้นตอนง่ายๆ ดังนี้:</p>
+        <ol class="list-decimal list-inside space-y-1.5 text-slate-400 bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800">
+          <li>สร้าง Google Sheet ใหม่ 1 แผ่น (แถวแรก: วันเวลา, เลขที่, ชื่อ, ห้อง, คะแนน, เต็ม, ร้อยละ, เวลาที่ใช้, จำนวนครั้งที่สลับหน้าจอ)</li>
+          <li>ไปที่เมนู <strong class="text-indigo-300">ส่วนขยาย (Extensions) &gt; Apps Script</strong></li>
+          <li>วางโค้ดสคริปต์ด้านล่างนี้ลงไป แล้วกดบันทึก (Save)</li>
+          <li>กด <strong class="text-indigo-300">ทำให้ใช้งานได้ (Deploy) &gt; การทำให้ใช้งานได้ใหม่ (New deployment)</strong></li>
+          <li>เลือกประเภท: <strong class="text-indigo-300">เว็บแอป (Web app)</strong>, ใครมีสิทธิ์เข้าถึง: <strong class="text-emerald-400">ทุกคน (Anyone)</strong></li>
+          <li>คัดลอก URL ของ Web App ที่ได้ นำมาวางในช่องด้านล่างนี้</li>
+        </ol>
+
+        <!-- Script Code Box -->
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <label class="font-semibold text-slate-400">โค้ด Google Apps Script (มีระบบบันทึก Anti-Cheat):</label>
+            <button onclick="copyAppsScriptCode()" class="text-indigo-400 hover:text-indigo-300 flex items-center gap-1">
+              <i class="fa-regular fa-copy"></i> คัดลอกโค้ด
+            </button>
+          </div>
+          <pre id="appsScriptCode" class="bg-slate-950 p-3 rounded-xl text-[10px] font-mono text-emerald-400 overflow-x-auto border border-slate-800 select-all leading-relaxed">
+function doPost(e) {
+  try {
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    var data = JSON.parse(e.postData.contents);
+    sheet.appendRow([
+      new Date(),
+      data.studentId,
+      data.name,
+      data.room,
+      data.score,
+      data.total,
+      data.percentage,
+      data.timeUsed,
+      data.tabSwitches
+    ]);
+    return ContentService.createTextOutput(JSON.stringify({result: "success"})).setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({result: "error", message: err.toString()})).setMimeType(ContentService.MimeType.JSON);
+  }
+}</pre>
+        </div>
+
+        <div>
+          <label class="block font-medium text-slate-200 mb-1">Google Web App URL:</label>
+          <input type="text" id="scriptUrlInput" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-600 text-xs focus:outline-none focus:border-indigo-500">
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
+        <button onclick="closeSettingsModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs hover:bg-slate-700">ยกเลิก</button>
+        <button onclick="saveSettings()" class="px-5 py-2 rounded-xl bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-500">บันทึกการตั้งค่า</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="max-w-4xl w-full mx-auto text-center mt-6 text-xs text-slate-500">
+    <p>สื่อการเรียนรู้วิทยาศาสตร์ ชั้นมัธยมศึกษาปีที่ 1 | ระบบป้องกันการทุจริตแบบเรียลไทม์</p>
+  </footer>
+
+  <!-- Web Audio API Sound Generator -->
+  <script>
+    class SoundEffects {
+      constructor() {
+        this.ctx = null;
+      }
+      init() {
+        if (!this.ctx) {
+          this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+      }
+      playCorrect() {
+        this.init();
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.12);
+        osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.25);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.35);
+      }
+      playWrong() {
+        this.init();
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(220, now);
+        osc.frequency.exponentialRampToValueAtTime(130.81, now + 0.25);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.3);
+      }
+      playWarning() {
+        this.init();
+        const now = this.ctx.currentTime;
+        [880, 440, 880, 440].forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.25, now + idx * 0.1);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.1 + 0.09);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now + idx * 0.1);
+          osc.stop(now + idx * 0.1 + 0.09);
+        });
+      }
+      playFinish() {
+        this.init();
+        const now = this.ctx.currentTime;
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.15, now + idx * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.08 + 0.25);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now + idx * 0.08);
+          osc.stop(now + idx * 0.08 + 0.25);
+        });
+      }
+    }
+    const sfx = new SoundEffects();
+  </script>
+
+  <!-- Game Logic, Anti-Cheating Engine & Questions Dataset -->
+  <script>
+    // 20 Question Dataset mapped from Grade 7 Science Midterm Exam Document
+    const questionsData = [
+      {
+        id: 1,
+        question: "ข้อใดกล่าว<strong class='text-pink-400'>ไม่ถูกต้อง</strong> เกี่ยวกับเทอร์มอมิเตอร์และอุณหภูมิ?",
+        options: [
+          "เทอร์มอมิเตอร์ใช้หลักการหดและขยายตัวของสารเมื่อได้รับความร้อน",
+          "อุณหภูมิ $0^\\circ\\text{C}$ หมายถึงไม่มีพลังงานความร้อนอยู่เลยในสสาร",
+          "เทอร์มอมิเตอร์วัดไข้ทั่วไปมักมีสเกลอยู่ในช่วง $35^\\circ\\text{C} - 42^\\circ\\text{C}$",
+          "เทอร์มอมิเตอร์แบบปรอทไม่สามารถวัดอุณหภูมิต่ำกว่า $-39^\\circ\\text{C}$ ได้ เพราะปรอทจะแข็งตัว"
+        ],
+        answer: 1,
+        hint: "พิจารณาความหมายของ 0 องศาเซลเซียส เทียบกับ ศูนย์สัมบูรณ์ (0 Kelvin)",
+        explanation: "คำตอบคือข้อ ข. เพราะอุณหภูมิ $0^\\circ\\text{C}$ ยังคงมีพลังงานความร้อนอยู่ สภาวะที่ไร้พลังงานความร้อนโดยสิ้นเชิงคือ ศูนย์สัมบูรณ์ ($0\\text{ K}$ หรือ $-273.15^\\circ\\text{C}$)"
+      },
+      {
+        id: 2,
+        question: "ตำแหน่งใดเป็นตำแหน่งที่ถูกต้องในการอ่านค่าสเกลเทอร์มอมิเตอร์เพื่อป้องกันความคลาดเคลื่อน?",
+        options: [
+          "มองจากตำแหน่งมุมสูงเฉียงลงมาหาของเหลว",
+          "มองจากตำแหน่งมุมต่ำช้อนขึ้นไปหากกสเกล",
+          "ให้สายตาอยู่ในระดับเดียวกับระดับของเหลวในเทอร์มอมิเตอร์พอดี",
+          "เอียงเทอร์มอมิเตอร์เข้าหาตัวเพื่อทำมุมสะท้อนแสง"
+        ],
+        answer: 2,
+        hint: "การลดความคลาดเคลื่อนจากการมองภาพ (Parallax error)",
+        explanation: "การอ่านค่าเทอร์มอมิเตอร์อย่างถูกต้อง สายตาต้องอยู่ในระดับเดียวกับส่วนโค้งของระดับของเหลวในเทอร์มอมิเตอร์"
+      },
+      {
+        id: 3,
+        question: "ถ้าเดินทางไปเที่ยวต่างประเทศ ซึ่งขณะนั้นอุณหภูมิ $50^\\circ\\text{F}$ (องศาฟาเรนไฮต์) ควรเตรียมเครื่องแต่งกายอย่างไรให้เหมาะสม?",
+        options: [
+          "เสื้อกล้าม กางเกงขาสั้น รับลมร้อน",
+          "เสื้อยืด กางเกงยีนส์ สบายๆ",
+          "เสื้อกันหนาว กางเกงขายาว ป้องกันความเย็น",
+          "เสื้อกันฝน และพกร่ม"
+        ],
+        answer: 2,
+        hint: "แปลงอุณหภูมิฟาเรนไฮต์เป็นเซลเซียสด้วยสูตร $C = \\frac{5}{9}(F - 32)$",
+        explanation: "เมื่อคำนวณ $C = \\frac{5}{9}(50 - 32) = 10^\\circ\\text{C}$ ซึ่งเป็นอุณหภูมิที่หนาวเย็น จึงต้องสวมเสื้อกันหนาว"
+      },
+      {
+        id: 4,
+        question: "อุปกรณ์หรือข้อใดอาศัยหลักการหดหรือขยายตัวของวัตถุเมื่อได้รับความร้อนโดยตรง?",
+        options: [
+          "การสลายตัวของหินกลายเป็นทรายตามธรรมชาติ",
+          "ระบบสวิตช์ตัดไฟอัตโนมัติในเตารีดไฟฟ้า",
+          "การยืดของสปริงเมื่อถูกแรงดึง",
+          "การทำเสื้อยืดจากเส้นใยสังเคราะห์"
+        ],
+        answer: 1,
+        hint: "นึกถึงแผ่นโลหะคู่ (Bimetallic strip) ที่ขยายตัวไม่เท่ากันเมื่อร้อน",
+        explanation: "เตารีดไฟฟ้าใช้แผ่นโลหะคู่ 2 ชนิดที่ขยายตัวไม่เท่ากันเมื่อได้รับความร้อนในการตัด-ต่อวงจรไฟฟ้าเพื่อควบคุมอุณหภูมิ"
+      },
+      {
+        id: 5,
+        question: "เพราะเหตุใด บ้านเรือนในสมัยก่อนจึงนิยมออกแบบทรงหลังคาให้สูงมาก?",
+        options: [
+          "เพื่อให้อากาศร้อนขยายตัวลอยสูงขึ้น แล้วอากาศเย็นจะไหลเข้ามาแทนที่",
+          "เพื่อให้อากาศเย็นขยายตัวและเคลื่อนที่จนเกิดลมพัด",
+          "เพื่อให้อากาศร้อนหดตัวลอยสูงขึ้น อากาศเย็นจะเข้ามาแทนที่",
+          "เพื่อให้อากาศเย็นหดตัวและเคลื่อนที่ระบายความร้อน"
+        ],
+        answer: 0,
+        hint: "อากาศร้อนจะมีความหนาแน่นน้อยกว่าอากาศเย็น",
+        explanation: "เมื่ออากาศได้รับความร้อนจะขยายตัวและมีความหนาแน่นลดลง จึงลอยตัวสูงขึ้นสู่จั่วหลังคา อากาศเย็นที่หนาแน่นกว่าจึงไหลเข้ามาแทนที่ทำให้บ้านเย็นสบาย"
+      },
+      {
+        id: 6,
+        question: "เมื่อสสารได้รับพลังงานความร้อน จะเกิดการเปลี่ยนแปลงตามข้อใด?",
+        options: [
+          "อนุภาคเคลื่อนที่เร็วขึ้น ระยะห่างเพิ่มขึ้น ส่งผลให้อุณหภูมิสูงขึ้นหรือเปลี่ยนสถานะ",
+          "อนุภาคของสสารจะหยุดเคลื่อนที่และเข้าชิดกันมากขึ้น",
+          "สสารจะมีปริมาตรหดเล็กลงเสมอ",
+          "มวลของสสารจะเพิ่มขึ้นตามพลังงานความร้อน"
+        ],
+        answer: 0,
+        hint: "ความร้อนเพิ่มพลังงานจลน์ให้กับอนุภาคของสสาร",
+        explanation: "พลังงานความร้อนทำให้อนุภาคเคลื่อนที่เร็วขึ้น ขยายระยะห่างระหว่างอนุภาค ทำให้อุณหภูมิสูงขึ้น หรือนำไปใช้สลายแรงยึดเหนี่ยวเพื่อเปลี่ยนสถานะ"
+      },
+      {
+        id: 7,
+        question: "ขณะที่สารเปลี่ยนสถานะจากของเหลวกลายเป็นของแข็ง (การแข็งตัว) ข้อใดกล่าว<strong class='text-pink-400'>ไม่ถูกต้อง</strong>?",
+        options: [
+          "สารจะมีอุณหภูมิลดลงเรื่อยๆ ขณะกำลังเปลี่ยนสถานะ",
+          "สารเกิดการแข็งตัว (Freezing)",
+          "สารเกิดการเปลี่ยนสถานะจากของเหลวเป็นของแข็ง",
+          "สารคายพลังงานความร้อนออกมาสู่สิ่งแวดล้อม"
+        ],
+        answer: 0,
+        hint: "คำนึงถึงอุณหภูมิของสสารขณะที่กำลังเกิดการเปลี่ยนสถานะ",
+        explanation: "ขณะที่สารกำลังเปลี่ยนสถานะ อุณหภูมิจะคงที่ (ไม่เปลี่ยนแปลง) ความร้อนที่ปล่อยออกมาเรียกว่าความร้อนแฝง"
+      },
+      {
+        id: 8,
+        question: "การเปลี่ยนสถานะในข้อใดเป็นกระบวนการ <strong class='text-emerald-400'>'ดูดพลังงานความร้อน'</strong> ทั้งหมด?",
+        options: [
+          "การแข็งตัว, การควบแน่น, การหลอมเหลว",
+          "การหลอมเหลว, การกลายเป็นไอ, การระเหิด",
+          "การแข็งตัว, การระเหิดกลับ, การควบแน่น",
+          "การกลายเป็นไอ, การควบแน่น, การแข็งตัว"
+        ],
+        answer: 1,
+        hint: "การดูดความร้อนทำให้สารเปลี่ยนสถานะไปสู่อนุภาคที่กระจายตัวมากขึ้น (แข็ง -> เหลว -> แก๊ส)",
+        explanation: "การหลอมเหลว (แข็ง->เหลว), การกลายเป็นไอ (เหลว->แก๊ส) และการระเหิด (แข็ง->แก๊ส) เป็นการรับ/ดูดพลังงานความร้อน"
+      },
+      {
+        id: 9,
+        question: "น้ำมวล $10\\text{ g}$ อุณหภูมิ $25^\\circ\\text{C}$ ต้มจนเดือด ($100^\\circ\\text{C}$) ต้องใช้พลังงานความร้อนกี่กิโลจูล? (กำหนด $c_{\\text{น้ำ}} = 4.2\\text{ kJ/kg}\\cdot\\text{K}$)",
+        options: [
+          "$2.10\\text{ kJ}$",
+          "$3.15\\text{ kJ}$",
+          "$2,100\\text{ kJ}$",
+          "$3,150\\text{ kJ}$"
+        ],
+        answer: 1,
+        hint: "ใช้สูตร $Q = mc\\Delta t$ (อย่าลืมแปลงมวล $10\\text{ g} = 0.01\\text{ kg}$)",
+        explanation: "$Q = mc\\Delta t = 0.01\\text{ kg} \\times 4.2\\text{ kJ/kg}\\cdot\\text{K} \\times (100 - 25)\\text{ K} = 3.15\\text{ kJ}$"
+      },
+      {
+        id: 10,
+        question: "การเปลี่ยนแปลงของน้ำในข้อใดใช้พลังงานความร้อน <strong class='text-pink-400'>มากที่สุด</strong>?",
+        options: [
+          "ต้มน้ำมวล $100\\text{ g}$ อุณหภูมิ $70^\\circ\\text{C}$ ให้เดือด",
+          "วางน้ำแข็งมวล $50\\text{ g}$ อุณหภูมิ $-10^\\circ\\text{C}$ ทิ้งไว้จนละลายหมด",
+          "ต้มน้ำเดือดมวล $80\\text{ g}$ ให้กลายเป็นไอน้ำทั้งหมด",
+          "ต้มน้ำมวล $100\\text{ g}$ อุณหภูมิ $0^\\circ\\text{C}$ ให้เดือด"
+        ],
+        answer: 2,
+        hint: "ความร้อนแฝงจำเพาะของการกลายเป็นไอน้ำ ($L = 540\\text{ cal/g}$) มีค่าสูงมาก",
+        explanation: "ข้อ ค ใช้พลังงาน $Q = mL = 80 \\times 540 = 43,200\\text{ cal}$ ซึ่งมากที่สุดเมื่อเทียบกับข้ออื่นๆ"
+      },
+      {
+        id: 11,
+        question: "ข้อใดกล่าวถึง <strong class='text-indigo-300'>'สมดุลความร้อน'</strong> ได้ถูกต้องที่สุด?",
+        options: [
+          "มวลที่เพิ่มขึ้นเท่ากับมวลที่ลดลง",
+          "อุณหภูมิที่เพิ่มขึ้นเท่ากับอุณหภูมิที่ลดลงเสมอ",
+          "พลังงานความร้อนที่ได้รับเท่ากับพลังงานความร้อนที่สูญเสีย ($Q_{\\text{ได้รับ}} = Q_{\\text{สูญเสีย}}$)",
+          "อัตราการพาความร้อนเท่ากับอัตราการนำความร้อน"
+        ],
+        answer: 2,
+        hint: "สมดุลความร้อนเกิดขึ้นเมื่อไม่มีการถ่ายโอนความร้อนสุทธิระหว่างกัน",
+        explanation: "เมื่อนำสารอุณหภูมิต่างกันมาผสมกัน จะเกิดการถ่ายโอนความร้อนจนกระทั่งอุณหภูมิเท่ากัน โดย $Q_{\\text{ได้รับ}} = Q_{\\text{สูญเสีย}}$"
+      },
+      {
+        id: 12,
+        question: "นำน้ำแข็ง $-10^\\circ\\text{C}$ ผสมกับน้ำเดือด ($100^\\circ\\text{C}$) อุณหภูมิของผสมในข้อใด <strong class='text-pink-400'>ไม่มีโอกาสเป็นไปได้</strong>?",
+        options: [
+          "$-5^\\circ\\text{C}$",
+          "$0^\\circ\\text{C}$",
+          "$70^\\circ\\text{C}$",
+          "$120^\\circ\\text{C}$"
+        ],
+        answer: 3,
+        hint: "อุณหภูมิผสมต้องอยู่ระหว่างอุณหภูมิเริ่มต้นต่ำสุดและสูงสุด",
+        explanation: "อุณหภูมิของผสมจะต้องอยู่ระหว่าง $-10^\\circ\\text{C}$ ถึง $100^\\circ\\text{C}$ จึงเป็นไปไม่ได้ที่จะสูงถึง $120^\\circ\\text{C}$"
+      },
+      {
+        id: 13,
+        question: "ใส่น้ำแข็ง $10\\text{ g}$ อุณหภูมิ $0^\\circ\\text{C}$ ลงในน้ำร้อน $20\\text{ g}$ อุณหภูมิ $70^\\circ\\text{C}$ อุณหภูมิผสมเป็นเท่าใด? ($L_{\\text{หลอม}} = 80\\text{ cal/g}, c = 1\\text{ cal/g}\\cdot^\\circ\\text{C}$)",
+        options: [
+          "$10^\\circ\\text{C}$",
+          "$20^\\circ\\text{C}$",
+          "$35^\\circ\\text{C}$",
+          "$55^\\circ\\text{C}$"
+        ],
+        answer: 1,
+        hint: "ตั้งสมการ $Q_{\\text{เพิ่ม}} = Q_{\\text{ลด}} \\rightarrow mL + mc(t - 0) = mc(70 - t)$",
+        explanation: "$(10 \\times 80) + (10 \\times 1 \\times t) = (20 \\times 1 \\times (70 - t)) \\rightarrow 800 + 10t = 1400 - 20t \\rightarrow 30t = 600 \\rightarrow t = 20^\\circ\\text{C}$"
+      },
+      {
+        id: 14,
+        question: "อุณหภูมิผสมในข้อใดมีค่า <strong class='text-emerald-400'>มากที่สุด</strong>?",
+        options: [
+          "น้ำ $20\\text{ g}$ อุณหภูมิ $20^\\circ\\text{C}$ ผสมกับน้ำเดือด $100\\text{ g}$",
+          "ละลายน้ำแข็ง $50\\text{ g}$ ในน้ำร้อน $100\\text{ g}$ อุณหภูมิ $70^\\circ\\text{C}$",
+          "ผ่านไอน้ำ $5\\text{ g}$ ($100^\\circ\\text{C}$) ลงในน้ำแข็ง $20\\text{ g}$",
+          "ใส่น้ำแข็ง $10\\text{ g}$ ($-10^\\circ\\text{C}$) ลงในน้ำเดือด $200\\text{ g}$"
+        ],
+        answer: 3,
+        hint: "พิจารณามวลและอุณหภูมิของน้ำเดือด ข้อ ง มีน้ำเดือดมากถึง 200 กรัม",
+        explanation: "คำนวณอุณหภูมิผสม ข้อ ก = $86.7^\\circ\\text{C}$, ข้อ ข = $20^\\circ\\text{C}$, ข้อ ค = $64^\\circ\\text{C}$, ข้อ ง = $91.2^\\circ\\text{C}$ ดังนั้นข้อ ง มีค่ามากที่สุด"
+      },
+      {
+        id: 15,
+        question: "ข้อใดกล่าวถูกต้องเกี่ยวกับทิศทางการถ่ายโอนพลังงานความร้อน?",
+        options: [
+          "ความร้อนจากสสารที่มีมวลมากถูกถ่ายโอนไปยังสสารที่มีมวลน้อย",
+          "ความร้อนจากสสารที่มีมวลน้อยถูกถ่ายโอนไปยังสสารที่มีมวลมาก",
+          "ความร้อนจากสสารที่มีอุณหภูมิสูงถูกถ่ายโอนไปยังสสารที่มีอุณหภูมิต่ำ",
+          "ความร้อนจากสสารที่มีอุณหภูมิต่ำถูกถ่ายโอนไปยังสสารที่มีอุณหภูมิสูง"
+        ],
+        answer: 2,
+        hint: "ทิศทางการถ่ายโอนขึ้นอยู่กับระดับความร้อน (อุณหภูมิ) ไม่ใช่มวล",
+        explanation: "ความร้อนจะถ่ายโอนจากบริเวณหรือวัตถุที่มีอุณหภูมิสูงไปยังบริเวณหรือวัตถุที่มีอุณหภูมิต่ำกว่าเสมอ"
+      },
+      {
+        id: 16,
+        question: "เทน้ำเดือดใส่แก้ว 4 ใบที่มีขนาดเท่ากัน ในปริมาณเท่ากัน ทิ้งไว้สักครู่ น้ำในแก้วที่ทำจากวัสดุใดจะมีอุณหภูมิ <strong class='text-pink-400'>ต่ำที่สุด</strong>?",
+        options: [
+          "แก้วเซรามิก",
+          "แก้วใส (Glass)",
+          "แก้วพลาสติก",
+          "แก้วอลูมิเนียม"
+        ],
+        answer: 3,
+        hint: "ตัวนำความร้อนที่ดีจะถ่ายเทความร้อนออกจากน้ำได้เร็วที่สุด",
+        explanation: "อลูมิเนียมเป็นตัวนำความร้อนที่ดีที่สุด ทำให้ความร้อนจากน้ำถ่ายโอนออกสู่อากาศภายนอกได้เร็วที่สุด น้ำจึงเย็นเร็วที่สุด"
+      },
+      {
+        id: 17,
+        question: "อุปกรณ์ในข้อใดใช้หลักการถ่ายโอนความร้อน <strong class='text-pink-400'>แตกต่างจากพวก</strong>?",
+        options: [
+          "กระทะโลหะสำหรับผัดอาหาร",
+          "พัดลมระบายความร้อน",
+          "เตาปิ้งย่างแบบมีพัดลม",
+          "เตาอบลมร้อน (Convection Oven)"
+        ],
+        answer: 0,
+        hint: "จำแนกประเภทระหว่าง การนำความร้อน และ การพาความร้อน",
+        explanation: "กระทะโลหะใช้หลักการ 'นำความร้อน' ผ่านวัตถุแข็ง ส่วนพัดลมและเตาอบลมร้อนใช้หลักการ 'พาความร้อน' ผ่านการหมุนเวียนของอากาศ"
+      },
+      {
+        id: 18,
+        question: "ข้อใดเรียงลำดับความสามารถในการ <strong class='text-indigo-300'>'นำความร้อน'</strong> ของสถานะสสารจาก มาก ไป น้อย ได้ถูกต้อง?",
+        options: [
+          "ของแข็ง > ของเหลว > แก๊ส",
+          "แก๊ส > ของเหลว > ของแข็ง",
+          "ของแข็ง > แก๊ส > ของเหลว",
+          "ของเหลว > แก๊ส > ของแข็ง"
+        ],
+        answer: 0,
+        hint: "ความชิดแน่นของอนุภาคส่งผลต่อความเร็วในการส่งผ่านพลังงาน",
+        explanation: "ของแข็งอนุภาคเรียงชิดกันมากที่สุดจึงนำความร้อนได้ดีที่สุด รองลงมาคือของเหลว ส่วนแก๊สอนุภาคอยู่ห่างกันมากที่สุดจึงนำความร้อนได้แย่ที่สุด"
+      },
+      {
+        id: 19,
+        question: "การต้มไข่ในบ่อน้ำพุร้อน เป็นการถ่ายโอนความร้อนรูปแบบใดเป็นหลัก?",
+        options: [
+          "การนำความร้อน",
+          "การพาความร้อน",
+          "การแผ่รังสีความร้อน",
+          "การสะท้อนความร้อน"
+        ],
+        answer: 1,
+        hint: "มีน้ำในบ่อน้ำพุร้อนทำหน้าที่เป็นตัวกลางในการพาความร้อน",
+        explanation: "เป็นการพาความร้อน โดยมีน้ำพุร้อนที่เป็นของเหลวทำหน้าที่เป็นตัวกลางเคลื่อนที่พาพลังงานความร้อนไปสู่ไข่ไก่"
+      },
+      {
+        id: 20,
+        question: "ข้อใดกล่าวได้ถูกต้องเกี่ยวกับการถ่ายโอนความร้อนและสมบัติความร้อน?",
+        options: [
+          "การแผ่รังสีความร้อนจำเป็นต้องอาศัยตัวกลางที่เป็นแก๊สเสมอ",
+          "สารที่มีความจุความร้อนจำเพาะสูง จะเปลี่ยนแปลงอุณหภูมิได้ง่ายกว่าสารอื่น",
+          "เมื่อแช่มือในน้ำร้อน ความเย็นจากมือจะถ่ายโอนไปยังน้ำ",
+          "พลังงานความร้อนที่สารรับและคายออกมาเพื่อเปลี่ยนสถานะที่อุณหภูมิเดียวกัน มีค่าเท่ากัน"
+        ],
+        answer: 3,
+        hint: "พิจารณาความร้อนแฝงในการหลอมเหลวและการแข็งตัวของน้ำ ณ $0^\\circ\\text{C}$",
+        explanation: "พลังงานความร้อนแฝงที่สารรับเพื่อเปลี่ยนสถานะ จะเท่ากับพลังงานความร้อนที่สารคายออกมาเพื่อเปลี่ยนสถานะกลับ ณ อุณหภูมิเดียวกันเสมอ"
+      }
+    ];
+
+    // Global State Variables
+    let currentQuestionIndex = 0;
+    let userAnswers = [];
+    let score = 0;
+    let comboCount = 0;
+    let startTime = null;
+    let timerInterval = null;
+    let selectedAvatar = '👨‍🔬';
+    let studentData = { name: '', studentId: '', room: '' };
+
+    // Anti-Cheating Engine State
+    let isGameActive = false;
+    let tabSwitches = 0;
+    let isWarningModalOpen = false;
+    let isAutoSubmitted = false;
+
+    // Initial Load Setup
+    document.addEventListener("DOMContentLoaded", () => {
+      const savedUrl = localStorage.getItem('sci_m1_script_url');
+      if (savedUrl) {
+        document.getElementById('scriptUrlInput').value = savedUrl;
+      }
+      setupSecurityListeners();
+    });
+
+    // -------------------------------------------------------------
+    // Anti-Cheating Security Engine Core
+    // -------------------------------------------------------------
+    function setupSecurityListeners() {
+      // 1. Tab Switch / Visibility Change Listener
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden && isGameActive && !isAutoSubmitted) {
+          triggerSecurityViolation("สลับแท็บเบราว์เซอร์หรือย่อหน้าจอ");
+        }
+      });
+
+      // 2. Window Blur / App Switch Listener
+      window.addEventListener('blur', () => {
+        if (isGameActive && !isWarningModalOpen && !isAutoSubmitted) {
+          triggerSecurityViolation("ออกจากหน้าต่างแอปพลิเคชัน");
+        }
+      });
+
+      // 3. Block Copy/Paste, Text Selection, and Shortcuts
+      document.addEventListener('copy', (e) => {
+        if (isGameActive) e.preventDefault();
+      });
+      document.addEventListener('selectstart', (e) => {
+        if (isGameActive) e.preventDefault();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (!isGameActive) return;
+        // Block F12, Ctrl+C, Ctrl+V, Ctrl+U, Ctrl+Shift+I
+        if (
+          e.key === 'F12' ||
+          (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'u' || e.key === 's' || e.key === 'i')) ||
+          (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C'))
+        ) {
+          e.preventDefault();
+        }
+      });
+    }
+
+    function triggerSecurityViolation(reason) {
+      if (!isGameActive || isWarningModalOpen || isAutoSubmitted) return;
+
+      tabSwitches++;
+      sfx.playWarning();
+
+      // Update Top Status Header Tally
+      const headerTally = document.getElementById('headerSwitchCount');
+      if (headerTally) headerTally.innerText = tabSwitches;
+
+      if (tabSwitches >= 3) {
+        // Exceeded maximum 2 allowed warnings -> Force Auto-Submit
+        autoSubmitExam(`ตรวจพบการสลับหน้าจอ/เปิดแอปอื่นเกินกำหนด (${tabSwitches} ครั้ง)`);
+      } else {
+        // Show Siren Warning Modal for Attempt 1 & 2
+        showWarningModal(reason);
+      }
+    }
+
+    function showWarningModal(reason) {
+      isWarningModalOpen = true;
+      document.getElementById('warningModalCountText').innerText = `ตรวจพบการสลับหน้าจอ ครั้งที่ ${tabSwitches} / 2`;
+      document.getElementById('warningModalDetail').innerText = `สาเหตุ: ${reason} - ห้ามออกจากหน้าต่างเกมเด็ดขาด หากสลับอีกครั้งระบบจะส่งข้อสอบและปรับคะแนนทันที!`;
+      document.getElementById('warningModal').classList.remove('hidden');
+    }
+
+    function dismissWarningModal() {
+      document.getElementById('warningModal').classList.add('hidden');
+      isWarningModalOpen = false;
+      requestFullscreenMode();
+    }
+
+    function autoSubmitExam(reason) {
+      isAutoSubmitted = true;
+      isGameActive = false;
+      
+      // Auto fill unanswered questions as incorrect
+      while (userAnswers.length < questionsData.length) {
+        userAnswers.push({
+          questionId: questionsData[userAnswers.length].id,
+          selected: -1,
+          isCorrect: false
+        });
+      }
+
+      // Show Cheated Banner Notice in Result Screen
+      document.getElementById('cheatedNoticeBanner').classList.remove('hidden');
+      document.getElementById('cheatedReasonText').innerText = reason;
+
+      finishGame();
+    }
+
+    function requestFullscreenMode() {
+      const docEl = document.documentElement;
+      if (docEl.requestFullscreen) {
+        docEl.requestFullscreen().catch(() => {});
+      } else if (docEl.webkitRequestFullscreen) {
+        docEl.webkitRequestFullscreen();
+      }
+    }
+
+    // -------------------------------------------------------------
+    // Game Flow Functions
+    // -------------------------------------------------------------
+    function selectAvatar(emoji) {
+      selectedAvatar = emoji;
+      document.querySelectorAll('.avatar-option').forEach(btn => {
+        btn.classList.remove('border-indigo-500');
+        btn.classList.add('border-transparent');
+        if (btn.innerText === emoji) {
+          btn.classList.add('border-indigo-500');
+        }
+      });
+    }
+
+    function startGame() {
+      const name = document.getElementById('studentName').value.trim();
+      const num = document.getElementById('studentNo').value.trim();
+      const room = document.getElementById('studentRoom').value.trim();
+
+      if (!name || !num || !room) {
+        document.getElementById('formError').classList.remove('hidden');
+        return;
+      }
+      document.getElementById('formError').classList.add('hidden');
+
+      studentData = { name, studentId: num, room };
+      
+      // Update UI Header Stats
+      document.getElementById('playerNameDisplay').innerText = `${name} (เลขที่ ${num})`;
+      document.getElementById('playerRoomDisplay').innerText = `ห้อง ${room}`;
+      document.getElementById('playerAvatarDisplay').innerText = selectedAvatar;
+      document.getElementById('headerSwitchCount').innerText = '0';
+
+      // Switch Screens
+      document.getElementById('startScreen').classList.add('hidden');
+      document.getElementById('gameScreen').classList.remove('hidden');
+
+      // Reset Game & Security Variables
+      currentQuestionIndex = 0;
+      score = 0;
+      comboCount = 0;
+      tabSwitches = 0;
+      userAnswers = [];
+      isAutoSubmitted = false;
+      isGameActive = true;
+      startTime = new Date();
+      
+      requestFullscreenMode();
+      startTimer();
+      renderQuestion();
+    }
+
+    function startTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        const elapsedSec = Math.floor((new Date() - startTime) / 1000);
+        const mins = String(Math.floor(elapsedSec / 60)).padStart(2, '0');
+        const secs = String(elapsedSec % 60).padStart(2, '0');
+        document.getElementById('timeDisplay').innerText = `${mins}:${secs}`;
+      }, 1000);
+    }
+
+    function renderQuestion() {
+      const q = questionsData[currentQuestionIndex];
+      
+      // Update Progress Bar
+      document.getElementById('questionNum').innerText = currentQuestionIndex + 1;
+      const progressPercent = ((currentQuestionIndex + 1) / questionsData.length) * 100;
+      document.getElementById('progressBar').style.width = `${progressPercent}%`;
+
+      // Set Question Text
+      const qTextEl = document.getElementById('questionText');
+      qTextEl.innerHTML = q.question;
+
+      // Reset Hint Component
+      const hintEl = document.getElementById('hintText');
+      hintEl.innerText = q.hint;
+      hintEl.classList.add('hidden');
+
+      // Render Option Buttons
+      const container = document.getElementById('optionsContainer');
+      container.innerHTML = '';
+
+      q.options.forEach((optText, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `option-btn w-full p-4 rounded-2xl bg-slate-900/80 hover:bg-slate-800/90 border border-slate-700/80 text-left flex items-center justify-between text-slate-200 text-sm sm:text-base group`;
+        btn.onclick = () => handleAnswer(idx);
+
+        btn.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-slate-800 group-hover:bg-indigo-600 text-slate-400 group-hover:text-white flex items-center justify-center font-bold text-xs transition shadow">
+              ${String.fromCharCode(65 + idx)}
+            </span>
+            <span>${optText}</span>
+          </div>
+          <i class="fa-solid fa-chevron-right text-slate-600 group-hover:text-indigo-400 transition"></i>
+        `;
+        container.appendChild(btn);
+      });
+
+      // Render KaTeX Formulas inside GameScreen
+      if (window.renderMathInElement) {
+        renderMathInElement(document.getElementById('gameScreen'), {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    }
+
+    function toggleHint() {
+      document.getElementById('hintText').classList.toggle('hidden');
+    }
+
+    function handleAnswer(selectedIdx) {
+      if (!isGameActive) return;
+
+      const q = questionsData[currentQuestionIndex];
+      const isCorrect = (selectedIdx === q.answer);
+
+      userAnswers.push({
+        questionId: q.id,
+        selected: selectedIdx,
+        isCorrect: isCorrect
+      });
+
+      if (isCorrect) {
+        score++;
+        comboCount++;
+        sfx.playCorrect();
+      } else {
+        comboCount = 0;
+        sfx.playWrong();
+      }
+
+      // Update Combo Streak Badge
+      const comboBadge = document.getElementById('comboBadge');
+      if (comboCount >= 2) {
+        document.getElementById('comboText').innerText = `Combo x${comboCount}!`;
+        comboBadge.classList.remove('hidden');
+        comboBadge.classList.add('flex');
+      } else {
+        comboBadge.classList.add('hidden');
+        comboBadge.classList.remove('flex');
+      }
+
+      document.getElementById('currentScore').innerText = score;
+
+      // Next Question or Finish
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questionsData.length) {
+        renderQuestion();
+      } else {
+        finishGame();
+      }
+    }
+
+    function finishGame() {
+      isGameActive = false;
+      clearInterval(timerInterval);
+      sfx.playFinish();
+
+      // Switch Screens
+      document.getElementById('gameScreen').classList.add('hidden');
+      document.getElementById('resultScreen').classList.remove('hidden');
+
+      // Final Score & Percentage Calculation
+      const total = questionsData.length;
+      const percentage = Math.round((score / total) * 100);
+      document.getElementById('finalScoreDisplay').innerText = score;
+      document.getElementById('percentageDisplay').innerText = `${percentage}%`;
+      document.getElementById('tabSwitchResultDisplay').innerText = `${tabSwitches} ครั้ง`;
+
+      // Assign Rank Badge
+      const badgeEl = document.getElementById('gradeBadge');
+      if (percentage >= 80) {
+        badgeEl.className = "py-2.5 px-4 rounded-xl bg-emerald-500/20 text-emerald-300 text-xs sm:text-sm font-bold border border-emerald-500/30";
+        badgeEl.innerHTML = `<i class="fa-solid fa-award mr-1"></i> ระดับ: ยอดเยี่ยม! (Thermal Master 🏆)`;
+      } else if (percentage >= 60) {
+        badgeEl.className = "py-2.5 px-4 rounded-xl bg-indigo-500/20 text-indigo-300 text-xs sm:text-sm font-bold border border-indigo-500/30";
+        badgeEl.innerHTML = `<i class="fa-solid fa-star mr-1"></i> ระดับ: ดีมาก (Rising Scientist 🌟)`;
+      } else {
+        badgeEl.className = "py-2.5 px-4 rounded-xl bg-amber-500/20 text-amber-300 text-xs sm:text-sm font-bold border border-amber-500/30";
+        badgeEl.innerHTML = `<i class="fa-solid fa-lightbulb mr-1"></i> ระดับ: นักเรียนรู้ผู้มุ่งมั่น (Keep Learning 💡)`;
+      }
+
+      // Render Detailed Reviews
+      renderReviewList();
+
+      // Submit Score to Google Sheets Backend
+      sendScoreToGoogleSheet(score, total, percentage, tabSwitches);
+    }
+
+    function sendScoreToGoogleSheet(score, total, percentage, tabSwitches) {
+      const scriptUrl = localStorage.getItem('sci_m1_script_url') || document.getElementById('scriptUrlInput').value.trim();
+      const statusIcon = document.getElementById('sheetStatusIcon');
+      const statusTitle = document.getElementById('sheetStatusTitle');
+      const statusDesc = document.getElementById('sheetStatusDesc');
+
+      if (!scriptUrl) {
+        statusIcon.className = "text-xl text-amber-400";
+        statusIcon.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i>`;
+        statusTitle.innerText = "ยังไม่ได้เชื่อมต่อ Google Sheet";
+        statusDesc.innerText = "คุณครูสามารถกดปุ่ม 'ตั้งค่าหลังบ้าน' ด้านบนเพื่อวาง Web App URL ครับ";
+        return;
+      }
+
+      statusIcon.className = "text-xl text-indigo-400 animate-spin";
+      statusIcon.innerHTML = `<i class="fa-solid fa-circle-notch"></i>`;
+      statusTitle.innerText = "กำลังบันทึกคะแนนเข้า Google Sheet...";
+      statusDesc.innerText = "ส่งข้อมูลไปยังตารางบันทึกผลของคุณครู";
+
+      const timeUsed = document.getElementById('timeDisplay').innerText;
+
+      fetch(scriptUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          studentId: studentData.studentId,
+          name: studentData.name,
+          room: studentData.room,
+          score: score,
+          total: total,
+          percentage: `${percentage}%`,
+          timeUsed: timeUsed,
+          tabSwitches: tabSwitches
+        })
+      })
+      .then(() => {
+        statusIcon.className = "text-xl text-emerald-400";
+        statusIcon.innerHTML = `<i class="fa-solid fa-circle-check"></i>`;
+        statusTitle.innerText = "บันทึกคะแนนสำเร็จแล้ว! ✅";
+        statusDesc.innerText = "ตารางคะแนนของคุณครูถูกอัปเดตเรียบร้อยแล้ว";
+      })
+      .catch((err) => {
+        console.error(err);
+        statusIcon.className = "text-xl text-rose-400";
+        statusIcon.innerHTML = `<i class="fa-solid fa-circle-xmark"></i>`;
+        statusTitle.innerText = "ไม่สามารถบันทึกคะแนนได้";
+        statusDesc.innerText = "กรุณาตรวจสอบ URL ของ Google Apps Script";
+      });
+    }
+
+    function renderReviewList() {
+      const listEl = document.getElementById('reviewList');
+      listEl.innerHTML = '';
+
+      questionsData.forEach((q, idx) => {
+        const userAns = userAnswers[idx];
+        const isAnswered = userAns && userAns.selected !== -1;
+        const isCorrect = userAns ? userAns.isCorrect : false;
+
+        const item = document.createElement('div');
+        item.className = `p-4 rounded-2xl bg-slate-900/90 border ${isCorrect ? 'border-emerald-500/30' : 'border-rose-500/30'} space-y-2 text-xs sm:text-sm`;
+
+        item.innerHTML = `
+          <div class="flex items-start justify-between gap-2">
+            <span class="font-bold ${isCorrect ? 'text-emerald-400' : 'text-rose-400'}">
+              ข้อ ${idx + 1}: ${isCorrect ? 'ตอบถูกต้อง ✓' : (isAnswered ? 'ตอบไม่ถูกต้อง ✗' : 'ไม่ได้ตอบ (หมดเวลา/ถูกตัดสิทธิ์)')}
+            </span>
+          </div>
+          <p class="text-slate-200 font-medium">${q.question}</p>
+          <div class="space-y-1 pt-1 text-xs">
+            <p class="text-slate-400">คำตอบของคุณ: <span class="${isCorrect ? 'text-emerald-300' : 'text-rose-300'} font-medium">${isAnswered ? q.options[userAns.selected] : '-'}</span></p>
+            ${!isCorrect ? `<p class="text-slate-400">คำตอบที่ถูกต้อง: <span class="text-emerald-400 font-semibold">${q.options[q.answer]}</span></p>` : ''}
+            <div class="text-slate-300 bg-slate-950/70 p-3 rounded-xl border border-slate-800/80 mt-2 leading-relaxed">
+              <strong class="text-indigo-300"><i class="fa-solid fa-circle-info mr-1"></i> คำอธิบาย:</strong> ${q.explanation}
+            </div>
+          </div>
+        `;
+        listEl.appendChild(item);
+      });
+
+      if (window.renderMathInElement) {
+        renderMathInElement(listEl, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    }
+
+    function toggleReviewSection() {
+      document.getElementById('reviewSection').classList.toggle('hidden');
+    }
+
+    function resetGame() {
+      document.getElementById('cheatedNoticeBanner').classList.add('hidden');
+      document.getElementById('resultScreen').classList.add('hidden');
+      document.getElementById('startScreen').classList.remove('hidden');
+    }
+
+    // Modal & Apps Script Utilities
+    function openSettingsModal() {
+      document.getElementById('settingsModal').classList.remove('hidden');
+    }
+    function closeSettingsModal() {
+      document.getElementById('settingsModal').classList.add('hidden');
+    }
+    function saveSettings() {
+      const url = document.getElementById('scriptUrlInput').value.trim();
+      localStorage.setItem('sci_m1_script_url', url);
+      closeSettingsModal();
+    }
+    function copyAppsScriptCode() {
+      const codeText = document.getElementById('appsScriptCode').innerText;
+      const textArea = document.createElement("textarea");
+      textArea.value = codeText;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      
+      const btn = event.currentTarget;
+      btn.innerHTML = `<i class="fa-solid fa-check"></i> คัดลอกแล้ว!`;
+      setTimeout(() => {
+        btn.innerHTML = `<i class="fa-regular fa-copy"></i> คัดลอกโค้ด`;
+      }, 2000);
+    }
+  </script>
+
+</body>
+</html>
